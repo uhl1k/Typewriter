@@ -11,7 +11,7 @@ public final class Data {
   private File openedFile;
   private boolean unsavedChanges;
   private DefaultListModel<Book> books;
-  private Data INSTANCE;
+  private static Data INSTANCE;
 
   private Data() {
     unsavedChanges = false;
@@ -22,7 +22,7 @@ public final class Data {
    * Returns the only instance of this class.
    * @return The only instance of this class.
    */
-  public Data getInstance() {
+  public static Data getInstance() {
     if(INSTANCE == null) {
       synchronized (Data.class) {
         if (INSTANCE == null) {
@@ -41,7 +41,7 @@ public final class Data {
 
   }
 
-  public void saveAs() {
+  public void saveAs(File file) {
 
   }
 
