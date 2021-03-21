@@ -1,7 +1,24 @@
 package cz.uhl1k.typewriter.model;
 
+import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
+import org.w3c.dom.Document;
+
 import javax.swing.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,12 +60,45 @@ public final class Data implements DataChangeListener, DataChangeSource{
 
   }
 
-  public void save() {
+  public void save() throws NoFileSpecifiedException, IOException {
+    if (openedFile == null) {
+      throw new NoFileSpecifiedException("No file specified!");
+    }
 
+    XMLOutputFactory factory = XMLOutputFactory.newInstance();
+    try {
+      XMLStreamWriter writer = factory.createXMLStreamWriter(new BufferedWriter(new FileWriter(openedFile)));
+      writer.writeStartDocument();
+      writer.writeStartElement("library");
+
+      writer.writeStartElement("meta");
+      writer.writeEndElement();
+
+      writer.writeStartElement("data");
+
+      for (int i = 0; i < books.getSize(); i++) {
+        books.getElementAt(i).toXml(writer);
+      }
+
+      writer.writeEndElement();
+
+      writer.writeEndElement();
+      writer.writeEndDocument();
+
+      writer.flush();
+      writer.close();
+    } catch (XMLStreamException ex) {
+
+    }
   }
 
-  public void saveAs(File file) {
-
+  public void saveAs(File file) throws IOException {
+    openedFile = file;
+    try {
+      save();
+    } catch (NoFileSpecifiedException ex) {
+      // This should never happen
+    }
   }
 
   public void close() {

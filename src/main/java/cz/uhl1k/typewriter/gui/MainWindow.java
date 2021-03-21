@@ -18,14 +18,18 @@
 
 package cz.uhl1k.typewriter.gui;
 
+import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
 import cz.uhl1k.typewriter.model.*;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 public class MainWindow extends JFrame implements DataChangeListener {
@@ -107,9 +111,11 @@ public class MainWindow extends JFrame implements DataChangeListener {
 
     var save = new JMenuItem(bundle.getString("save"));
     save.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK));
+    save.addActionListener(e -> save());
     file.add(save);
 
     var saveAs = new JMenuItem(bundle.getString("saveAs"));
+    saveAs.addActionListener(e -> saveAs());
     file.add(saveAs);
 
     file.addSeparator();
@@ -217,7 +223,7 @@ public class MainWindow extends JFrame implements DataChangeListener {
 
       switch (option) {
         case 0:
-          //TODO - saving the changes
+          save();
         case 1:
           System.exit(0);
           break;
@@ -472,6 +478,43 @@ public class MainWindow extends JFrame implements DataChangeListener {
   private void textChanged() {
     if (sections.getSelectedIndex() >= 0) {
       sections.getSelectedValue().setContent(content.getText());
+    }
+  }
+
+  private void save() {
+    try {
+      Data.getInstance().save();
+    } catch (NoFileSpecifiedException ex) {
+      saveAs();
+    } catch (Exception ex) {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+  }
+
+  private void saveAs() {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileFilter(new FileNameExtensionFilter("Typewriter library file (*.tpw)", "tpw"));
+    int option = fileChooser.showSaveDialog(this);
+    if(option == JFileChooser.APPROVE_OPTION){
+      try {
+        var file = fileChooser.getSelectedFile();
+        if (!file.getPath().endsWith(".tpw")) {
+          file = new File(file + ".tpw");
+        }
+        Data.getInstance().saveAs(file);
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
+            bundle.getString("error"),
+            JOptionPane.ERROR_MESSAGE
+        );
+      }
     }
   }
 
