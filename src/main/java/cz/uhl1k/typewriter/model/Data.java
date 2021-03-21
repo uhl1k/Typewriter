@@ -2,20 +2,25 @@ package cz.uhl1k.typewriter.model;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for manipulation with data. This class is singleton.
  */
-public final class Data {
+public final class Data implements DataChangeListener, DataChangeSource{
 
   private File openedFile;
   private boolean unsavedChanges;
   private DefaultListModel<Book> books;
   private static Data INSTANCE;
 
+  private List<DataChangeListener> listeners;
+
   private Data() {
     unsavedChanges = false;
     books = new DefaultListModel<>();
+    listeners = new ArrayList<>();
   }
 
   /**
@@ -72,6 +77,7 @@ public final class Data {
   public void addBook(Book book) {
     if (!books.contains(book)) {
       books.addElement(book);
+      book.registerListener(this);
       fireDataChange();
     }
   }
@@ -92,12 +98,14 @@ public final class Data {
   public void removeBook(Book book) {
     if (books.contains(book)) {
       books.removeElement(book);
+      book.unregisterListener(this);
       fireDataChange();
     }
   }
 
   private void fireDataChange() {
     unsavedChanges = true;
+    listeners.forEach(l -> l.dataChanged());
   }
 
   /**
@@ -114,5 +122,22 @@ public final class Data {
    */
   public boolean hasOpenedFile() {
     return openedFile != null;
+  }
+
+  @Override
+  public void dataChanged() {
+    fireDataChange();
+  }
+
+  @Override
+  public void registerListener(DataChangeListener listener) {
+    if (!listeners.contains(listener)) {
+      listeners.add(listener);
+    }
+  }
+
+  @Override
+  public void unregisterListener(DataChangeListener listener) {
+    listeners.remove(listener);
   }
 }

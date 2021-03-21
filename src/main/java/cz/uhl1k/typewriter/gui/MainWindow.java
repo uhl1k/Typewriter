@@ -20,6 +20,7 @@ package cz.uhl1k.typewriter.gui;
 
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.Data;
+import cz.uhl1k.typewriter.model.DataChangeListener;
 import cz.uhl1k.typewriter.model.Section;
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.ResourceBundle;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements DataChangeListener {
 
   ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
@@ -37,6 +38,8 @@ public class MainWindow extends JFrame {
 
   public MainWindow() {
     buildGui();
+
+    Data.getInstance().registerListener(this);
 
     books.setModel(Data.getInstance().getBooks());
 
@@ -132,10 +135,12 @@ public class MainWindow extends JFrame {
 
     var editBook = new JButton(new ImageIcon(getClass().getResource("/ico/editBook.png")));
     editBook.setToolTipText(bundle.getString("editBook"));
+    editBook.addActionListener(e -> editBook());
     toolBar.add(editBook);
 
     var deleteBook = new JButton(new ImageIcon(getClass().getResource("/ico/deleteBook.png")));
     deleteBook.setToolTipText(bundle.getString("deleteBook"));
+    deleteBook.addActionListener(e -> removeBook());
     toolBar.add(deleteBook);
 
     toolBar.addSeparator();
@@ -183,7 +188,7 @@ public class MainWindow extends JFrame {
           JOptionPane.WARNING_MESSAGE,
           null,
           new String[]{bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")},
-          1);
+          0);
 
       switch (option) {
         case 0:
@@ -221,5 +226,50 @@ public class MainWindow extends JFrame {
           JOptionPane.ERROR_MESSAGE
       );
     }
+  }
+
+  private void removeBook() {
+    if (books.getSelectedIndex() >= 0) {
+      int option = JOptionPane.showOptionDialog(
+          this,
+          bundle.getString("reallyDeleteBook"),
+          bundle.getString("areYouSure"),
+          JOptionPane.DEFAULT_OPTION,
+          JOptionPane.WARNING_MESSAGE,
+          null,
+          new String[]{bundle.getString("yes"), bundle.getString("no")},
+          1
+      );
+
+      if (option == 0) {
+        Data.getInstance().removeBook(books.getSelectedValue());
+      }
+    } else {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("noBookSelected"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+  }
+
+  private void editBook() {
+    if (books.getSelectedIndex() >= 0) {
+      new EditBook(this, books.getSelectedValue());
+    } else {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("noBookSelected"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+  }
+
+  @Override
+  public void dataChanged() {
+    books.updateUI();
+    sections.updateUI();
   }
 }

@@ -131,6 +131,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
   public void addSection(Section section) {
     if (!sections.contains(section)) {
       sections.addElement(section);
+      section.registerListener(this);
       fireDataChange();
     }
   }
@@ -142,6 +143,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
   public void removeSection(Section section) {
     if (sections.contains(section)) {
       sections.removeElement(section);
+      section.unregisterListener(this);
       fireDataChange();
     }
   }
