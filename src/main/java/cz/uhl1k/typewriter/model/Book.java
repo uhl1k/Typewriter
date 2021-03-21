@@ -178,8 +178,8 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
   }
 
   @Override
-  public int compareTo(Book o) {
-    return 0;
+  public int compareTo(Book book) {
+    return book.getTitle().compareTo(this.title);
   }
 
   @Override
@@ -189,7 +189,13 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   @Override
   public boolean equals(Object obj) {
-    return super.equals(obj);
+    if (obj == this) {
+      return true;
+    } else if (obj instanceof Book) {
+      Book b = (Book) obj;
+      return b.getTitle().equals(this.title);
+    }
+    return false;
   }
 
   @Override
