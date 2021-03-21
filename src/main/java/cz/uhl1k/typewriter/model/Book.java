@@ -1,19 +1,19 @@
 /*
-    Typewriter - simple novel and poem writing software
-    Copyright (C) 2021  uhl1k (Roman Janků)
+  Typewriter - simple novel and poem writing software
+  Copyright (C) 2021  uhl1k (Roman Janků)
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 package cz.uhl1k.typewriter.model;
@@ -131,6 +131,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
   public void addSection(Section section) {
     if (!sections.contains(section)) {
       sections.addElement(section);
+      section.registerListener(this);
       fireDataChange();
     }
   }
@@ -142,6 +143,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
   public void removeSection(Section section) {
     if (sections.contains(section)) {
       sections.removeElement(section);
+      section.unregisterListener(this);
       fireDataChange();
     }
   }
@@ -178,8 +180,8 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
   }
 
   @Override
-  public int compareTo(Book o) {
-    return 0;
+  public int compareTo(Book book) {
+    return book.getTitle().compareTo(this.title);
   }
 
   @Override
@@ -189,7 +191,13 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   @Override
   public boolean equals(Object obj) {
-    return super.equals(obj);
+    if (obj == this) {
+      return true;
+    } else if (obj instanceof Book) {
+      Book b = (Book) obj;
+      return b.getTitle().equals(this.title);
+    }
+    return false;
   }
 
   @Override
