@@ -3,6 +3,7 @@ package cz.uhl1k.typewriter.model;
 import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**

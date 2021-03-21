@@ -176,6 +176,7 @@ public class MainWindow extends JFrame implements DataChangeListener {
 
     var editSection = new JButton(new ImageIcon(getClass().getResource("/ico/editSection.png")));
     editSection.setToolTipText(bundle.getString("editSection"));
+    editSection.addActionListener(e -> editSection());
     toolBar.add(editSection);
 
     var deleteSection = new JButton(new ImageIcon(getClass().getResource("/ico/deleteSection.png")));
@@ -185,10 +186,12 @@ public class MainWindow extends JFrame implements DataChangeListener {
 
     var moveUp = new JButton(new ImageIcon(getClass().getResource("/ico/moveUp.png")));
     moveUp.setToolTipText(bundle.getString("moveUp"));
+    moveUp.addActionListener(e -> moveUp());
     toolBar.add(moveUp);
 
     var moveDown = new JButton(new ImageIcon(getClass().getResource("/ico/moveDown.png")));
     moveDown.setToolTipText(bundle.getString("moveDown"));
+    moveDown.addActionListener(e -> moveDown());
     toolBar.add(moveDown);
 
     toolBar.addSeparator();
@@ -375,6 +378,67 @@ public class MainWindow extends JFrame implements DataChangeListener {
       if (option == 0) {
         books.getSelectedValue().removeSection(sections.getSelectedValue());
       }
+    } else {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("noSectionSelected"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+  }
+
+  private void editSection() {
+    if (sections.getSelectedIndex() >= 0) {
+      new EditSection(sections.getSelectedValue());
+    } else {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("noSectionSelected"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+  }
+
+  private void moveUp() {
+    if (sections.getSelectedIndex() > 0) {
+      int index = sections.getSelectedIndex();
+      var temp = books.getSelectedValue().getSections().get(index);
+      books.getSelectedValue().getSections().set(index, books.getSelectedValue().getSections().get(index - 1));
+      books.getSelectedValue().getSections().set(index - 1, temp);
+      sections.setSelectedIndex(index - 1);
+    } else if (sections.getSelectedIndex() == 0) {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("firstCannotBeMoved"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    } else {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("noSectionSelected"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+  }
+
+  private void moveDown() {
+    if (sections.getSelectedIndex() < sections.getModel().getSize() - 1 && sections.getSelectedIndex() >= 0) {
+      int index = sections.getSelectedIndex();
+      var temp = books.getSelectedValue().getSections().get(index);
+      books.getSelectedValue().getSections().set(index, books.getSelectedValue().getSections().get(index+1));
+      books.getSelectedValue().getSections().set(index+1, temp);
+      sections.setSelectedIndex(index+1);
+    } else if (sections.getSelectedIndex() == sections.getModel().getSize() - 1) {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("lastCannotBeMoved"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
     } else {
       JOptionPane.showMessageDialog(
           this,
