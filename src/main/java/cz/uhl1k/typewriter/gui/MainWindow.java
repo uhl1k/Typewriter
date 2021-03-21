@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
 
 public class MainWindow extends JFrame {
 
-  ResourceBundle bundle = ResourceBundle.getBundle("bundle");
+  ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
   JList<Book> books;
   JList<Section> sections;
@@ -37,6 +37,8 @@ public class MainWindow extends JFrame {
 
   public MainWindow() {
     buildGui();
+
+    books.setModel(Data.getInstance().getBooks());
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setMinimumSize(new Dimension(600, 400));
@@ -125,6 +127,7 @@ public class MainWindow extends JFrame {
 
     var newBook = new JButton(new ImageIcon(getClass().getResource("/ico/addBook.png")));
     newBook.setToolTipText(bundle.getString("newBook"));
+    newBook.addActionListener(e -> addBook());
     toolBar.add(newBook);
 
     var editBook = new JButton(new ImageIcon(getClass().getResource("/ico/editBook.png")));
@@ -171,7 +174,7 @@ public class MainWindow extends JFrame {
   }
 
   private void close() {
-    if (true || Data.getInstance().hasUnsavedChanges()) {
+    if (Data.getInstance().hasUnsavedChanges()) {
       int option = JOptionPane.showOptionDialog(
           this,
           bundle.getString("unsavedChanges"),
@@ -191,6 +194,32 @@ public class MainWindow extends JFrame {
         default:
           return;
       }
+    }
+  }
+
+  private void addBook() {
+    String name = JOptionPane.showInputDialog(bundle.getString("enterBookName"));
+
+    if (name.length() == 0) {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("shortBookName"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+
+    var book = new Book(name, System.getProperty("user.name"));
+
+    if (!Data.getInstance().hasBook(book)) {
+      Data.getInstance().addBook(book);
+    } else {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("existingBook"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
     }
   }
 }
