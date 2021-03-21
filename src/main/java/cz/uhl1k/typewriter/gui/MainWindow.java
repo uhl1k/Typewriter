@@ -18,11 +18,11 @@
 
 package cz.uhl1k.typewriter.gui;
 
-import cz.uhl1k.typewriter.model.Book;
-import cz.uhl1k.typewriter.model.Data;
-import cz.uhl1k.typewriter.model.DataChangeListener;
-import cz.uhl1k.typewriter.model.Section;
+import cz.uhl1k.typewriter.model.*;
+
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -59,7 +59,26 @@ public class MainWindow extends JFrame implements DataChangeListener {
     sections = new JList<>();
     content = new JTextArea();
 
+    books.addListSelectionListener(e -> bookSelectionChanged());
+    sections.addListSelectionListener(e -> sectionSelectionChanged());
+    content.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        textChanged();
+      }
 
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        textChanged();
+      }
+
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        textChanged();
+      }
+    });
+
+    content.setEnabled(false);
 
     var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT, books, sections);
     var horizontal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, vertical, content);
@@ -147,10 +166,12 @@ public class MainWindow extends JFrame implements DataChangeListener {
 
     var addChapter = new JButton(new ImageIcon(getClass().getResource("/ico/addChapter.png")));
     addChapter.setToolTipText(bundle.getString("newChapter"));
+    addChapter.addActionListener(e -> addChapter());
     toolBar.add(addChapter);
 
     var addPoem = new JButton(new ImageIcon(getClass().getResource("/ico/addPoem.png")));
     addPoem.setToolTipText(bundle.getString("newPoem"));
+    addPoem.addActionListener(e -> addPoem());
     toolBar.add(addPoem);
 
     var editSection = new JButton(new ImageIcon(getClass().getResource("/ico/editSection.png")));
@@ -159,6 +180,7 @@ public class MainWindow extends JFrame implements DataChangeListener {
 
     var deleteSection = new JButton(new ImageIcon(getClass().getResource("/ico/deleteSection.png")));
     deleteSection.setToolTipText(bundle.getString("deleteSection"));
+    deleteSection.addActionListener(e -> removeSection());
     toolBar.add(deleteSection);
 
     var moveUp = new JButton(new ImageIcon(getClass().getResource("/ico/moveUp.png")));
@@ -264,6 +286,128 @@ public class MainWindow extends JFrame implements DataChangeListener {
           bundle.getString("error"),
           JOptionPane.ERROR_MESSAGE
       );
+    }
+  }
+
+  private void addChapter() {
+    if (books.getSelectedIndex() >= 0) {
+      String name = JOptionPane.showInputDialog(bundle.getString("enterChapterName"));
+
+      if (name.length() == 0) {
+        JOptionPane.showMessageDialog(
+            this,
+            bundle.getString("shortChapterName"),
+            bundle.getString("error"),
+            JOptionPane.ERROR_MESSAGE
+        );
+      }
+
+      var chapter = new Chapter(name);
+
+      if (!books.getSelectedValue().hasSection(chapter)) {
+        books.getSelectedValue().addSection(chapter);
+      } else {
+        JOptionPane.showMessageDialog(
+            this,
+            bundle.getString("existingChapterOrPoem"),
+            bundle.getString("error"),
+            JOptionPane.ERROR_MESSAGE
+        );
+      }
+    } else {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("noBookSelected"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+  }
+
+  private void addPoem() {
+    if (books.getSelectedIndex() >= 0) {
+      String name = JOptionPane.showInputDialog(bundle.getString("enterPoemName"));
+
+      if (name.length() == 0) {
+        JOptionPane.showMessageDialog(
+            this,
+            bundle.getString("shortPoemName"),
+            bundle.getString("error"),
+            JOptionPane.ERROR_MESSAGE
+        );
+      }
+
+      var poem = new Poem(name);
+
+      if (!books.getSelectedValue().hasSection(poem)) {
+        books.getSelectedValue().addSection(poem);
+      } else {
+        JOptionPane.showMessageDialog(
+            this,
+            bundle.getString("existingChapterOrPoem"),
+            bundle.getString("error"),
+            JOptionPane.ERROR_MESSAGE
+        );
+      }
+    } else {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("noBookSelected"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+  }
+
+  private void removeSection() {
+    if (sections.getSelectedIndex() >= 0) {
+      int option = JOptionPane.showOptionDialog(
+          this,
+          bundle.getString("reallyDeleteSection"),
+          bundle.getString("areYouSure"),
+          JOptionPane.DEFAULT_OPTION,
+          JOptionPane.WARNING_MESSAGE,
+          null,
+          new String[]{bundle.getString("yes"), bundle.getString("no")},
+          1
+      );
+
+      if (option == 0) {
+        books.getSelectedValue().removeSection(sections.getSelectedValue());
+      }
+    } else {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("noSectionSelected"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+  }
+
+  private void bookSelectionChanged() {
+    if (books.getSelectedIndex() >= 0) {
+      sections.setModel(books.getSelectedValue().getSections());
+      sections.setEnabled(true);
+    } else {
+      sections.setModel(new DefaultListModel<>());
+      sections.setEnabled(false);
+    }
+  }
+
+  private void sectionSelectionChanged() {
+    if (sections.getSelectedIndex() >= 0) {
+      content.setText(sections.getSelectedValue().getContent());
+      content.setEnabled(true);
+    } else {
+      content.setText("");
+      content.setEnabled(false);
+    }
+  }
+
+  private void textChanged() {
+    if (sections.getSelectedIndex() >= 0) {
+      sections.getSelectedValue().setContent(content.getText());
     }
   }
 
