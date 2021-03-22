@@ -28,8 +28,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.ResourceBundle;
 
 public class MainWindow extends JFrame implements DataChangeListener, FileChangeListener {
@@ -48,7 +49,14 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
     books.setModel(Data.getInstance().getBooks());
 
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        close();
+      }
+    });
+
     setMinimumSize(new Dimension(600, 400));
     setTitle(bundle.getString("typewriter"));
     setVisible(true);
@@ -234,6 +242,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           return;
       }
     }
+    System.exit(0);
   }
 
   private void addBook() {
