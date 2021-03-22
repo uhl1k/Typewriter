@@ -32,7 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-public class MainWindow extends JFrame implements DataChangeListener {
+public class MainWindow extends JFrame implements DataChangeListener, FileChangeListener {
 
   ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
@@ -43,7 +43,8 @@ public class MainWindow extends JFrame implements DataChangeListener {
   public MainWindow() {
     buildGui();
 
-    Data.getInstance().registerListener(this);
+    Data.getInstance().registerListener((DataChangeListener) this);
+    Data.getInstance().registerListener((FileChangeListener) this);
 
     books.setModel(Data.getInstance().getBooks());
 
@@ -592,5 +593,14 @@ public class MainWindow extends JFrame implements DataChangeListener {
   public void dataChanged() {
     books.updateUI();
     sections.updateUI();
+  }
+
+  @Override
+  public void fileChanged(File file) {
+    if (file == null) {
+      setTitle(bundle.getString("typewriter"));
+    } else {
+      setTitle(bundle.getString("typewriter") + " - " + file.getName());
+    }
   }
 }
