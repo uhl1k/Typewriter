@@ -493,6 +493,9 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
   private void save() {
     try {
       Data.getInstance().save();
+      if (getTitle().endsWith("*")) {
+        setTitle(getTitle().substring(0, getTitle().length()-2));
+      }
     } catch (NoFileSpecifiedException ex) {
       saveAs();
     } catch (Exception ex) {
@@ -516,6 +519,9 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           file = new File(file + ".tpw");
         }
         Data.getInstance().saveAs(file);
+        if (getTitle().endsWith("*")) {
+          setTitle(getTitle().substring(0, getTitle().length()-2));
+        }
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(
             this,
@@ -578,6 +584,9 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     if(optionSave == JFileChooser.APPROVE_OPTION){
       try {
         Data.getInstance().open(fileChooser.getSelectedFile());
+        if (getTitle().endsWith("*")) {
+          setTitle(getTitle().substring(0, getTitle().length()-2));
+        }
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(
             this,
@@ -593,6 +602,10 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
   public void dataChanged() {
     books.updateUI();
     sections.updateUI();
+
+    if (!getTitle().endsWith("*")) {
+      setTitle(getTitle() + " *");
+    }
   }
 
   @Override
