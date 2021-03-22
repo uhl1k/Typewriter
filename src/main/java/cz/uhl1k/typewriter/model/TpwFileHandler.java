@@ -101,7 +101,7 @@ class TpwFileHandler extends DefaultHandler {
   @Override
   public void characters(char[] ch, int start, int length) throws SAXException {
     if (poem || chapter) {
-      getLastSection().setContent(new String(ch, start, length));
+      getLastSection().setContent(getLastSection().getContent().concat(new String(ch, start, length)));
     }
   }
 

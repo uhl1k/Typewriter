@@ -1,16 +1,14 @@
 package cz.uhl1k.typewriter.model;
 
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import javax.swing.*;
 import javax.xml.parsers.*;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +59,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
     try {
       XMLStreamWriter writer = factory.createXMLStreamWriter(new BufferedWriter(new FileWriter(openedFile)));
-      writer.writeStartDocument();
+      writer.writeStartDocument("UTF-8","1.0");
       writer.writeStartElement("library");
 
       writer.writeStartElement("meta");
@@ -100,10 +98,16 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     openedFile = file;
     fireFileChange();
 
+    InputStream inputStream= new FileInputStream(openedFile);
+    Reader reader = new InputStreamReader(inputStream,"UTF-8");
+
+    InputSource is = new InputSource(reader);
+    is.setEncoding("UTF-8");
+
     SAXParserFactory factory = SAXParserFactory.newInstance();
     SAXParser parser = factory.newSAXParser();
     TpwFileHandler handler = new TpwFileHandler();
-    parser.parse(openedFile, handler);
+    parser.parse(is, handler);
 
     unsavedChanges = false;
   }
