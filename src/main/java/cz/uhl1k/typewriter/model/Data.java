@@ -78,6 +78,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
       writer.flush();
       writer.close();
+      unsavedChanges = false;
     } catch (XMLStreamException ex) {
 
     }
