@@ -1,26 +1,17 @@
 package cz.uhl1k.typewriter.model;
 
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
-import org.w3c.dom.Document;
-
+import org.xml.sax.SAXException;
 import javax.swing.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.*;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -101,8 +92,22 @@ public final class Data implements DataChangeListener, DataChangeSource{
     }
   }
 
-  public void close() {
+  public void open(File file) throws SAXException, IOException, ParserConfigurationException {
+    clear();
+    openedFile = file;
 
+    SAXParserFactory factory = SAXParserFactory.newInstance();
+    SAXParser parser = factory.newSAXParser();
+    TpwFileHandler handler = new TpwFileHandler();
+    parser.parse(openedFile, handler);
+
+    unsavedChanges = false;
+  }
+
+  public void clear() {
+    books.clear();
+    unsavedChanges = false;
+    openedFile = null;
   }
 
   /**

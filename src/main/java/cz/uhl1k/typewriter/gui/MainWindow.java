@@ -103,10 +103,12 @@ public class MainWindow extends JFrame implements DataChangeListener {
 
     var create = new JMenuItem(bundle.getString("create"));
     create.setAccelerator(KeyStroke.getKeyStroke('N', InputEvent.CTRL_DOWN_MASK));
+    create.addActionListener(e -> create());
     file.add(create);
 
     var open = new JMenuItem(bundle.getString("open"));
     open.setAccelerator(KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK));
+    open.addActionListener(e -> open());
     file.add(open);
 
     var save = new JMenuItem(bundle.getString("save"));
@@ -236,7 +238,9 @@ public class MainWindow extends JFrame implements DataChangeListener {
   private void addBook() {
     String name = JOptionPane.showInputDialog(bundle.getString("enterBookName"));
 
-    if (name.length() == 0) {
+    if (name == null) {
+      return;
+    } else if (name.length() == 0) {
       JOptionPane.showMessageDialog(
           this,
           bundle.getString("shortBookName"),
@@ -302,7 +306,9 @@ public class MainWindow extends JFrame implements DataChangeListener {
     if (books.getSelectedIndex() >= 0) {
       String name = JOptionPane.showInputDialog(bundle.getString("enterChapterName"));
 
-      if (name.length() == 0) {
+      if (name == null) {
+        return;
+      } else if (name.length() == 0) {
         JOptionPane.showMessageDialog(
             this,
             bundle.getString("shortChapterName"),
@@ -337,7 +343,9 @@ public class MainWindow extends JFrame implements DataChangeListener {
     if (books.getSelectedIndex() >= 0) {
       String name = JOptionPane.showInputDialog(bundle.getString("enterPoemName"));
 
-      if (name.length() == 0) {
+      if (name == null) {
+        return;
+      } else if (name.length() == 0) {
         JOptionPane.showMessageDialog(
             this,
             bundle.getString("shortPoemName"),
@@ -511,6 +519,68 @@ public class MainWindow extends JFrame implements DataChangeListener {
         JOptionPane.showMessageDialog(
             this,
             bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
+            bundle.getString("error"),
+            JOptionPane.ERROR_MESSAGE
+        );
+      }
+    }
+  }
+
+  private void create() {
+    if (Data.getInstance().hasUnsavedChanges()) {
+      int option = JOptionPane.showOptionDialog(
+          this,
+          bundle.getString("unsavedChanges"),
+          bundle.getString("quitQuestion"),
+          JOptionPane.YES_NO_CANCEL_OPTION,
+          JOptionPane.WARNING_MESSAGE,
+          null,
+          new String[]{bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")},
+          0);
+
+      switch (option) {
+        case 0:
+          save();
+        case 1:
+          break;
+        default:
+          return;
+      }
+    }
+    Data.getInstance().clear();
+  }
+
+  private void open() {
+    if (Data.getInstance().hasUnsavedChanges()) {
+      int option = JOptionPane.showOptionDialog(
+          this,
+          bundle.getString("unsavedChanges"),
+          bundle.getString("quitQuestion"),
+          JOptionPane.YES_NO_CANCEL_OPTION,
+          JOptionPane.WARNING_MESSAGE,
+          null,
+          new String[]{bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")},
+          0);
+
+      switch (option) {
+        case 0:
+          save();
+        case 1:
+          break;
+        default:
+          return;
+      }
+    }
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileFilter(new FileNameExtensionFilter("Typewriter library file (*.tpw)", "tpw"));
+    int optionSave = fileChooser.showOpenDialog(this);
+    if(optionSave == JFileChooser.APPROVE_OPTION){
+      try {
+        Data.getInstance().open(fileChooser.getSelectedFile());
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            bundle.getString("wrongOpeningFile") + "\n" + ex.getMessage(),
             bundle.getString("error"),
             JOptionPane.ERROR_MESSAGE
         );
