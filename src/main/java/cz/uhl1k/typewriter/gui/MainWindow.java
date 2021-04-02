@@ -21,13 +21,32 @@ package cz.uhl1k.typewriter.gui;
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
 import cz.uhl1k.typewriter.export.ExporterFactory;
 import cz.uhl1k.typewriter.export.TextExporter;
-import cz.uhl1k.typewriter.model.*;
-
-import javax.swing.*;
+import cz.uhl1k.typewriter.model.Book;
+import cz.uhl1k.typewriter.model.Chapter;
+import cz.uhl1k.typewriter.model.Data;
+import cz.uhl1k.typewriter.model.DataChangeListener;
+import cz.uhl1k.typewriter.model.FileChangeListener;
+import cz.uhl1k.typewriter.model.Poem;
+import cz.uhl1k.typewriter.model.Section;
+import javax.swing.DefaultListModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -35,6 +54,9 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ResourceBundle;
 
+/**
+ * The main window of this application.
+ */
 public class MainWindow extends JFrame implements DataChangeListener, FileChangeListener {
 
   ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
@@ -43,6 +65,9 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
   JList<Section> sections;
   JTextArea content;
 
+  /**
+   * Creates and shows a main window.
+   */
   public MainWindow() {
     buildGui();
 
@@ -304,7 +329,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
   private void editBook() {
     if (books.getSelectedIndex() >= 0) {
-      new EditBook(this, books.getSelectedValue());
+      new EditBook(books.getSelectedValue());
     } else {
       JOptionPane.showMessageDialog(
           this,

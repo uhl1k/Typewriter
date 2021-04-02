@@ -18,12 +18,7 @@
 
 package cz.uhl1k.typewriter.model;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import javax.swing.*;
-import javax.xml.parsers.DocumentBuilder;
+import javax.swing.DefaultListModel;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.time.LocalDateTime;
@@ -38,11 +33,11 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   private String title;
   private String author;
-  private LocalDateTime created;
+  private final LocalDateTime created;
   private LocalDateTime modified;
 
-  private List<DataChangeListener> listeners;
-  private DefaultListModel<Section> sections;
+  private final List<DataChangeListener> listeners;
+  private final DefaultListModel<Section> sections;
 
   /**
    * Creates a new book with given parameters.
@@ -99,7 +94,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Sets new author of the book. If the new author is same as the old one, nothing happens.
-   * @param author
+   * @param author New author of the book.
    */
   public void setAuthor(String author) {
     if (!this.author.equals(author)) {
@@ -167,7 +162,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   private void fireDataChange() {
     modified = LocalDateTime.now();
-    listeners.forEach(l -> l.dataChanged());
+    listeners.forEach(DataChangeListener::dataChanged);
   }
 
   @Override
