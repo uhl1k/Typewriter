@@ -1,27 +1,36 @@
 package cz.uhl1k.typewriter.model;
 
+import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import javax.swing.*;
-import java.io.File;
+import javax.xml.parsers.*;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Class for manipulation with data. This class is singleton.
  */
-public final class Data implements DataChangeListener, DataChangeSource{
+public final class Data implements DataChangeListener, DataChangeSource, FileChangeSource{
 
   private File openedFile;
   private boolean unsavedChanges;
   private DefaultListModel<Book> books;
   private static Data INSTANCE;
 
-  private List<DataChangeListener> listeners;
+  private List<DataChangeListener> dataChangeListeners;
+  private List<FileChangeListener> fileChangeListeners;
 
   private Data() {
     unsavedChanges = false;
     books = new DefaultListModel<>();
-    listeners = new ArrayList<>();
+    dataChangeListeners = new ArrayList<>();
+    fileChangeListeners = new ArrayList<>();
   }
 
   /**
@@ -43,16 +52,65 @@ public final class Data implements DataChangeListener, DataChangeSource{
 
   }
 
-  public void save() {
+  public void save() throws NoFileSpecifiedException, IOException {
+    if (openedFile == null) {
+      throw new NoFileSpecifiedException("No file specified!");
+    }
 
+    XMLOutputFactory factory = XMLOutputFactory.newInstance();
+    try {
+      XMLStreamWriter writer = factory.createXMLStreamWriter(new BufferedWriter(new FileWriter(openedFile)));
+      writer.writeStartDocument("UTF-8","1.0");
+      writer.writeStartElement("library");
+
+      writer.writeStartElement("meta");
+      writer.writeEndElement();
+
+      writer.writeStartElement("data");
+
+      for (int i = 0; i < books.getSize(); i++) {
+        books.getElementAt(i).toXml(writer);
+      }
+
+      writer.writeEndElement();
+
+      writer.writeEndElement();
+      writer.writeEndDocument();
+
+      writer.flush();
+      writer.close();
+      unsavedChanges = false;
+    } catch (XMLStreamException ex) {
+
+    }
   }
 
-  public void saveAs(File file) {
-
+  public void saveAs(File file) throws IOException {
+    openedFile = file;
+    fireFileChange();
+    try {
+      save();
+    } catch (NoFileSpecifiedException ex) {
+      // This should never happen
+    }
   }
 
-  public void close() {
+  public void open(File file) throws SAXException, IOException, ParserConfigurationException {
+    clear();
+    openedFile = file;
+    fireFileChange();
 
+    TpwFileHandler handler = TpwFileHandler.getHandler();
+    handler.parseFile(openedFile);
+
+    unsavedChanges = false;
+  }
+
+  public void clear() {
+    books.clear();
+    unsavedChanges = false;
+    openedFile = null;
+    fireFileChange();
   }
 
   /**
@@ -106,7 +164,11 @@ public final class Data implements DataChangeListener, DataChangeSource{
 
   private void fireDataChange() {
     unsavedChanges = true;
-    listeners.forEach(l -> l.dataChanged());
+    dataChangeListeners.forEach(l -> l.dataChanged());
+  }
+
+  private void fireFileChange() {
+    fileChangeListeners.forEach(l -> l.fileChanged(openedFile));
   }
 
   /**
@@ -132,13 +194,25 @@ public final class Data implements DataChangeListener, DataChangeSource{
 
   @Override
   public void registerListener(DataChangeListener listener) {
-    if (!listeners.contains(listener)) {
-      listeners.add(listener);
+    if (!dataChangeListeners.contains(listener)) {
+      dataChangeListeners.add(listener);
     }
   }
 
   @Override
   public void unregisterListener(DataChangeListener listener) {
-    listeners.remove(listener);
+    dataChangeListeners.remove(listener);
+  }
+
+  @Override
+  public void registerListener(FileChangeListener listener) {
+    if (!fileChangeListeners.contains(listener)) {
+      fileChangeListeners.add(listener);
+    }
+  }
+
+  @Override
+  public void unregisterListener(FileChangeListener listener) {
+    fileChangeListeners.remove(listener);
   }
 }

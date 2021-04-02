@@ -18,15 +18,23 @@
 
 package cz.uhl1k.typewriter.model;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import javax.swing.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Representation of book in typewriter.
  */
-public class Book implements DataChangeSource, DataChangeListener, Comparable<Book> {
+public class Book implements DataChangeSource, DataChangeListener, Comparable<Book>, XmlSerializable {
 
   private String title;
   private String author;
@@ -203,5 +211,20 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
   @Override
   public String toString() {
     return title;
+  }
+
+  @Override
+  public void toXml(XMLStreamWriter writer) throws XMLStreamException {
+    writer.writeStartElement("book");
+    writer.writeAttribute("title", title);
+    writer.writeAttribute("author", author);
+    writer.writeAttribute("created", created.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+    writer.writeAttribute("modified", modified.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+
+    for (int i = 0; i < sections.getSize(); i++) {
+      sections.get(i).toXml(writer);
+    }
+
+    writer.writeEndElement();
   }
 }

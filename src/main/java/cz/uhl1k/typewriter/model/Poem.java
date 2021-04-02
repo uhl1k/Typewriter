@@ -1,6 +1,12 @@
 package cz.uhl1k.typewriter.model;
 
+import org.w3c.dom.Document;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Representation of poem in Typewriter.
@@ -39,7 +45,12 @@ public class Poem extends Section {
   }
 
   @Override
-  public void toXml() {
-
+  public void toXml(XMLStreamWriter writer) throws XMLStreamException {
+    writer.writeStartElement("poem");
+    writer.writeAttribute("title", title);
+    writer.writeAttribute("created", created.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+    writer.writeAttribute("modified", modified.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+    writer.writeCharacters(content);
+    writer.writeEndElement();
   }
 }

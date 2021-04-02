@@ -18,17 +18,24 @@
 
 package cz.uhl1k.typewriter.gui;
 
+import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
+import cz.uhl1k.typewriter.export.ExporterFactory;
+import cz.uhl1k.typewriter.export.TextExporter;
 import cz.uhl1k.typewriter.model.*;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.ResourceBundle;
 
-public class MainWindow extends JFrame implements DataChangeListener {
+public class MainWindow extends JFrame implements DataChangeListener, FileChangeListener {
 
   ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
@@ -39,11 +46,19 @@ public class MainWindow extends JFrame implements DataChangeListener {
   public MainWindow() {
     buildGui();
 
-    Data.getInstance().registerListener(this);
+    Data.getInstance().registerListener((DataChangeListener) this);
+    Data.getInstance().registerListener((FileChangeListener) this);
 
     books.setModel(Data.getInstance().getBooks());
 
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        close();
+      }
+    });
+
     setMinimumSize(new Dimension(600, 400));
     setTitle(bundle.getString("typewriter"));
     setVisible(true);
@@ -99,17 +114,21 @@ public class MainWindow extends JFrame implements DataChangeListener {
 
     var create = new JMenuItem(bundle.getString("create"));
     create.setAccelerator(KeyStroke.getKeyStroke('N', InputEvent.CTRL_DOWN_MASK));
+    create.addActionListener(e -> create());
     file.add(create);
 
     var open = new JMenuItem(bundle.getString("open"));
     open.setAccelerator(KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK));
+    open.addActionListener(e -> open());
     file.add(open);
 
     var save = new JMenuItem(bundle.getString("save"));
     save.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK));
+    save.addActionListener(e -> save());
     file.add(save);
 
     var saveAs = new JMenuItem(bundle.getString("saveAs"));
+    saveAs.addActionListener(e -> saveAs());
     file.add(saveAs);
 
     file.addSeparator();
@@ -198,6 +217,7 @@ public class MainWindow extends JFrame implements DataChangeListener {
 
     var exportText = new JButton(new ImageIcon(getClass().getResource("/ico/exportText.png")));
     exportText.setToolTipText(bundle.getString("exportSelectedBookAsText"));
+    exportText.addActionListener(e -> exportText());
     toolBar.add(exportText);
 
     return toolBar;
@@ -217,7 +237,7 @@ public class MainWindow extends JFrame implements DataChangeListener {
 
       switch (option) {
         case 0:
-          //TODO - saving the changes
+          save();
         case 1:
           System.exit(0);
           break;
@@ -225,12 +245,15 @@ public class MainWindow extends JFrame implements DataChangeListener {
           return;
       }
     }
+    System.exit(0);
   }
 
   private void addBook() {
     String name = JOptionPane.showInputDialog(bundle.getString("enterBookName"));
 
-    if (name.length() == 0) {
+    if (name == null) {
+      return;
+    } else if (name.length() == 0) {
       JOptionPane.showMessageDialog(
           this,
           bundle.getString("shortBookName"),
@@ -296,7 +319,9 @@ public class MainWindow extends JFrame implements DataChangeListener {
     if (books.getSelectedIndex() >= 0) {
       String name = JOptionPane.showInputDialog(bundle.getString("enterChapterName"));
 
-      if (name.length() == 0) {
+      if (name == null) {
+        return;
+      } else if (name.length() == 0) {
         JOptionPane.showMessageDialog(
             this,
             bundle.getString("shortChapterName"),
@@ -331,7 +356,9 @@ public class MainWindow extends JFrame implements DataChangeListener {
     if (books.getSelectedIndex() >= 0) {
       String name = JOptionPane.showInputDialog(bundle.getString("enterPoemName"));
 
-      if (name.length() == 0) {
+      if (name == null) {
+        return;
+      } else if (name.length() == 0) {
         JOptionPane.showMessageDialog(
             this,
             bundle.getString("shortPoemName"),
@@ -475,9 +502,163 @@ public class MainWindow extends JFrame implements DataChangeListener {
     }
   }
 
+  private void save() {
+    try {
+      Data.getInstance().save();
+      if (getTitle().endsWith("*")) {
+        setTitle(getTitle().substring(0, getTitle().length()-2));
+      }
+    } catch (NoFileSpecifiedException ex) {
+      saveAs();
+    } catch (Exception ex) {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
+  }
+
+  private void saveAs() {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileFilter(new FileNameExtensionFilter("Typewriter library file (*.tpw)", "tpw"));
+    int option = fileChooser.showSaveDialog(this);
+    if(option == JFileChooser.APPROVE_OPTION){
+      try {
+        var file = fileChooser.getSelectedFile();
+        if (!file.getPath().endsWith(".tpw")) {
+          file = new File(file + ".tpw");
+        }
+        Data.getInstance().saveAs(file);
+        if (getTitle().endsWith("*")) {
+          setTitle(getTitle().substring(0, getTitle().length()-2));
+        }
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
+            bundle.getString("error"),
+            JOptionPane.ERROR_MESSAGE
+        );
+      }
+    }
+  }
+
+  private void create() {
+    if (Data.getInstance().hasUnsavedChanges()) {
+      int option = JOptionPane.showOptionDialog(
+          this,
+          bundle.getString("unsavedChanges"),
+          bundle.getString("quitQuestion"),
+          JOptionPane.YES_NO_CANCEL_OPTION,
+          JOptionPane.WARNING_MESSAGE,
+          null,
+          new String[]{bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")},
+          0);
+
+      switch (option) {
+        case 0:
+          save();
+        case 1:
+          break;
+        default:
+          return;
+      }
+    }
+    Data.getInstance().clear();
+  }
+
+  private void open() {
+    if (Data.getInstance().hasUnsavedChanges()) {
+      int option = JOptionPane.showOptionDialog(
+          this,
+          bundle.getString("unsavedChanges"),
+          bundle.getString("quitQuestion"),
+          JOptionPane.YES_NO_CANCEL_OPTION,
+          JOptionPane.WARNING_MESSAGE,
+          null,
+          new String[]{bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")},
+          0);
+
+      switch (option) {
+        case 0:
+          save();
+        case 1:
+          break;
+        default:
+          return;
+      }
+    }
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileFilter(new FileNameExtensionFilter("Typewriter library file (*.tpw)", "tpw"));
+    int optionSave = fileChooser.showOpenDialog(this);
+    if(optionSave == JFileChooser.APPROVE_OPTION){
+      try {
+        Data.getInstance().open(fileChooser.getSelectedFile());
+        if (getTitle().endsWith("*")) {
+          setTitle(getTitle().substring(0, getTitle().length()-2));
+        }
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            bundle.getString("wrongOpeningFile") + "\n" + ex.getMessage(),
+            bundle.getString("error"),
+            JOptionPane.ERROR_MESSAGE
+        );
+      }
+    }
+  }
+
+  private void exportText() {
+    if (books.getSelectedIndex() < 0) {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("noBookSelected"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE
+      );
+      return;
+    }
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileFilter(new FileNameExtensionFilter("Plain text file (*.txt)", "txt"));
+    int option = fileChooser.showSaveDialog(this);
+    if(option == JFileChooser.APPROVE_OPTION){
+      try {
+        var file = fileChooser.getSelectedFile();
+        if (!file.getPath().endsWith(".txt")) {
+          file = new File(file + ".txt");
+        }
+        TextExporter exporter = ExporterFactory.getNewTextExporter();
+        exporter.exportToFile(books.getSelectedValue(), file);
+      } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(
+            this,
+            bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
+            bundle.getString("error"),
+            JOptionPane.ERROR_MESSAGE
+        );
+      }
+    }
+  }
+
   @Override
   public void dataChanged() {
     books.updateUI();
     sections.updateUI();
+
+    if (!getTitle().endsWith("*")) {
+      setTitle(getTitle() + " *");
+    }
+  }
+
+  @Override
+  public void fileChanged(File file) {
+    if (file == null) {
+      setTitle(bundle.getString("typewriter"));
+    } else {
+      setTitle(bundle.getString("typewriter") + " - " + file.getName());
+    }
   }
 }
