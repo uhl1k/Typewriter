@@ -27,6 +27,8 @@ import javax.xml.stream.XMLStreamWriter;
 public interface XmlSerializable {
   /**
    * Method for serialization to XML.
+   * @param writer XML writer to write to.
+   * @throws XMLStreamException When error occurred while writing xml file.
    */
   void toXml(XMLStreamWriter writer) throws XMLStreamException;
 }
