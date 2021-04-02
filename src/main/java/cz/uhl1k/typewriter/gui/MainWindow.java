@@ -304,7 +304,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
   private void editBook() {
     if (books.getSelectedIndex() >= 0) {
-      new EditBook(this, books.getSelectedValue());
+      new EditBook(books.getSelectedValue());
     } else {
       JOptionPane.showMessageDialog(
           this,

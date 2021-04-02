@@ -21,7 +21,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
   private File openedFile;
   private boolean unsavedChanges;
   private DefaultListModel<Book> books;
-  private static Data INSTANCE;
+  private static Data instance;
 
   private List<DataChangeListener> dataChangeListeners;
   private List<FileChangeListener> fileChangeListeners;
@@ -38,14 +38,14 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
    * @return The only instance of this class.
    */
   public static Data getInstance() {
-    if(INSTANCE == null) {
+    if(instance == null) {
       synchronized (Data.class) {
-        if (INSTANCE == null) {
-          INSTANCE = new Data();
+        if (instance == null) {
+          instance = new Data();
         }
       }
     }
-    return INSTANCE;
+    return instance;
   }
 
   public void load(File file) {

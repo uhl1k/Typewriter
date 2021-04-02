@@ -19,7 +19,7 @@ public class EditBook extends JDialog {
   Book book;
 
 
-  public EditBook(JFrame parent, Book book) {
+  public EditBook(Book book) {
     this.book = book;
 
     setLayout(new GridLayout(5, 1));
