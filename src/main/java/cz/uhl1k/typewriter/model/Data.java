@@ -9,6 +9,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,16 +100,8 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     openedFile = file;
     fireFileChange();
 
-    InputStream inputStream= new FileInputStream(openedFile);
-    Reader reader = new InputStreamReader(inputStream,"UTF-8");
-
-    InputSource is = new InputSource(reader);
-    is.setEncoding("UTF-8");
-
-    SAXParserFactory factory = SAXParserFactory.newInstance();
-    SAXParser parser = factory.newSAXParser();
-    TpwFileHandler handler = new TpwFileHandler();
-    parser.parse(is, handler);
+    TpwFileHandler handler = TpwFileHandler.getHandler();
+    handler.parseFile(openedFile);
 
     unsavedChanges = false;
   }

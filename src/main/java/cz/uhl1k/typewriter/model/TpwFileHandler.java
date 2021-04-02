@@ -1,12 +1,17 @@
 package cz.uhl1k.typewriter.model;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.EndElement;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
+import java.io.*;
 import java.time.LocalDateTime;
 
-class TpwFileHandler extends DefaultHandler {
+class TpwFileHandler {
   private boolean meta = false;
   private boolean data = false;
   private boolean book = false;
@@ -15,93 +20,122 @@ class TpwFileHandler extends DefaultHandler {
 
   private Book lastBook = null;
 
-  @Override
-  public void endElement(String uri, String localName, String qName) throws SAXException {
-    switch (qName.toLowerCase()) {
-      case "meta":
-        meta = false;
-        break;
+  private static TpwFileHandler handler = new TpwFileHandler();
 
-      case "data":
-        data = false;
-        break;
+  private TpwFileHandler() {
 
-      case "book":
-        book = false;
-        lastBook = null;
-        break;
-
-      case "poem":
-        poem = false;
-        break;
-
-      case "chapter":
-        chapter = false;
-        break;
-    }
   }
 
-  @Override
-  public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-    switch (qName.toLowerCase()) {
-      case "meta":
-        if (!data) {
-          meta = true;
-        }
-        break;
-
-      case "data":
-        if (!meta) {
-          data = true;
-        }
-        break;
-
-      case "book":
-        if (data) {
-          book = true;
-          Book book = new Book(
-              attributes.getValue("title"),
-              attributes.getValue("author"),
-              LocalDateTime.parse(attributes.getValue("created")),
-              LocalDateTime.parse(attributes.getValue("modified"))
-          );
-          Data.getInstance().addBook(book);
-          lastBook = book;
-        }
-        break;
-
-      case "poem":
-        if (book) {
-          poem = true;
-          Poem poem = new Poem(
-              attributes.getValue("title"),
-              "",
-              LocalDateTime.parse(attributes.getValue("created")),
-              LocalDateTime.parse(attributes.getValue("modified"))
-          );
-          lastBook.addSection(poem);
-        }
-        break;
-
-      case "chapter":
-        if (book) {
-          chapter = true;
-          Chapter chapter = new Chapter(
-              attributes.getValue("title"),
-              "",
-              LocalDateTime.parse(attributes.getValue("created")),
-              LocalDateTime.parse(attributes.getValue("modified"))
-          );
-          lastBook.addSection(chapter);
-        }
-        break;
-    }
+  public static TpwFileHandler getHandler() {
+    return handler;
   }
 
-  @Override
-  public void characters(char[] ch, int start, int length) throws SAXException {
-    if (poem || chapter) {
-      getLastSection().setContent(getLastSection().getContent().concat(new String(ch, start, length)));
+  public void parseFile(File file) {
+    XMLInputFactory factory = XMLInputFactory.newInstance();
+    try (BufferedReader br = new BufferedReader(new FileReader(file))){
+      XMLEventReader reader = factory.createXMLEventReader(br);
+
+      while (reader.hasNext()) {
+        XMLEvent event = reader.nextEvent();
+        String name = "";
+
+        switch (event.getEventType()) {
+          case XMLStreamConstants.START_ELEMENT:
+            StartElement startElement = event.asStartElement();
+            name = startElement.getName().getLocalPart();
+            switch (name.toLowerCase()) {
+              case "meta":
+                if (!data) {
+                  meta = true;
+                }
+                break;
+
+              case "data":
+                if (!meta) {
+                  data = true;
+                }
+                break;
+
+              case "book":
+                if (data) {
+                  book = true;
+                  Book book = new Book(
+                      startElement.getAttributeByName(new QName("title")).getValue(),
+                      startElement.getAttributeByName(new QName("author")).getValue(),
+                      LocalDateTime.parse(startElement.getAttributeByName(new QName("created")).getValue()),
+                      LocalDateTime.parse(startElement.getAttributeByName(new QName("modified")).getValue())
+                  );
+                  Data.getInstance().addBook(book);
+                  lastBook = book;
+                }
+                break;
+
+              case "poem":
+                if (book) {
+                  poem = true;
+                  Poem poem = new Poem(
+                      startElement.getAttributeByName(new QName("title")).getValue(),
+                    "",
+                    LocalDateTime.parse(startElement.getAttributeByName(new QName("created")).getValue()),
+                    LocalDateTime.parse(startElement.getAttributeByName(new QName("modified")).getValue())
+                  );
+                  lastBook.addSection(poem);
+                }
+                break;
+
+              case "chapter":
+                if (book) {
+                  chapter = true;
+                  Chapter chapter = new Chapter(
+                      startElement.getAttributeByName(new QName("title")).getValue(),
+                      "",
+                      LocalDateTime.parse(startElement.getAttributeByName(new QName("created")).getValue()),
+                      LocalDateTime.parse(startElement.getAttributeByName(new QName("modified")).getValue())
+                  );
+                  lastBook.addSection(chapter);
+                }
+                break;
+            }
+            break;
+          case XMLStreamConstants.END_ELEMENT:
+            EndElement endElement = event.asEndElement();
+            name = endElement.getName().getLocalPart();
+            switch (name.toLowerCase()) {
+              case "meta":
+                meta = false;
+                break;
+
+              case "data":
+                data = false;
+                break;
+
+              case "book":
+                book = false;
+                break;
+
+              case "poem":
+                poem = false;
+                break;
+
+              case "chapter":
+                chapter = false;
+                break;
+            }
+            break;
+          case XMLStreamConstants.CHARACTERS:
+            if (poem || chapter) {
+              getLastSection().setContent(event.asCharacters().getData());
+            }
+            break;
+        }
+      }
+
+    } catch (FileNotFoundException ex) {
+
+    } catch (IOException ex) {
+
+    } catch (XMLStreamException ex) {
+
     }
   }
 
