@@ -1,15 +1,34 @@
+/*
+  Typewriter - simple novel and poem writing software
+  Copyright (C) 2021  uhl1k (Roman Janků)
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 package cz.uhl1k.typewriter.model;
 
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import javax.swing.*;
-import javax.xml.parsers.*;
+import javax.swing.DefaultListModel;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +71,12 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
   }
 
+  /**
+   * Saves
+   * data to a current file.
+   * @throws NoFileSpecifiedException When there is no current file specified.
+   * @throws IOException When an error occurred when saving file.
+   */
   public void save() throws NoFileSpecifiedException, IOException {
     if (openedFile == null) {
       throw new NoFileSpecifiedException("No file specified!");
@@ -85,6 +110,11 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     }
   }
 
+  /**
+   * Saves data to anew file and sets this file as a opened file.
+   * @param file File to save to and set as opened file.
+   * @throws IOException When an error occurred during saving file.
+   */
   public void saveAs(File file) throws IOException {
     openedFile = file;
     fireFileChange();
@@ -95,6 +125,13 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     }
   }
 
+  /**
+   * Opens a new file. If there is file opened, it will be closed without saving changes.
+   * @param file File to open.
+   * @throws SAXException When an error occurred when parsing the file.
+   * @throws IOException When an error occurred when opening the file.
+   * @throws ParserConfigurationException When an error occurred when parsing the file.
+   */
   public void open(File file) throws SAXException, IOException, ParserConfigurationException {
     clear();
     openedFile = file;
@@ -106,6 +143,9 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     unsavedChanges = false;
   }
 
+  /**
+   * Clears the data.
+   */
   public void clear() {
     books.clear();
     unsavedChanges = false;
