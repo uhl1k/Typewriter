@@ -184,7 +184,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   @Override
   public int compareTo(Book book) {
-    return book.getTitle().compareTo(this.title);
+    return this.title.compareToIgnoreCase(book.getTitle());
   }
 
   @Override

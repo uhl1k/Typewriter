@@ -175,7 +175,16 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
    */
   public void addBook(Book book) {
     if (!books.contains(book)) {
-      books.addElement(book);
+      int index = 0;
+      while (index < books.getSize() && book.compareTo(books.getElementAt(index)) < 0) {
+        index++;
+      }
+      index++;
+      if (index >= books.getSize()) {
+        books.addElement(book);
+      } else {
+        books.insertElementAt(book, index);
+      }
       book.registerListener(this);
       fireDataChange();
     }
