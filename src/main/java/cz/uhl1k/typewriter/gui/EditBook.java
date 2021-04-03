@@ -19,6 +19,7 @@
 package cz.uhl1k.typewriter.gui;
 
 import cz.uhl1k.typewriter.model.Book;
+import cz.uhl1k.typewriter.model.Data;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -112,7 +113,12 @@ public class EditBook extends JDialog {
   }
 
   private void titleChanged() {
-    book.setTitle(title.getText());
+    if (
+        !Data.getInstance().hasBook(new Book(title.getText(), "")) &&
+        title.getText().length() > 0
+    ) {
+      book.setTitle(title.getText());
+    }
   }
 
   private void authorChanged() {
