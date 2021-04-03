@@ -21,8 +21,14 @@ package cz.uhl1k.typewriter.gui;
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
 import cz.uhl1k.typewriter.export.ExporterFactory;
 import cz.uhl1k.typewriter.export.TextExporter;
-import cz.uhl1k.typewriter.model.*;
-
+import cz.uhl1k.typewriter.model.Book;
+import cz.uhl1k.typewriter.model.Chapter;
+import cz.uhl1k.typewriter.model.Data;
+import cz.uhl1k.typewriter.model.DataChangeEvent;
+import cz.uhl1k.typewriter.model.DataChangeListener;
+import cz.uhl1k.typewriter.model.FileChangeListener;
+import cz.uhl1k.typewriter.model.Poem;
+import cz.uhl1k.typewriter.model.Section;
 import javax.swing.DefaultListModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
