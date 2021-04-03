@@ -30,7 +30,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class for manipulation with data. This class is singleton.
@@ -175,18 +177,9 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
    */
   public void addBook(Book book) {
     if (!books.contains(book)) {
-      int index = 0;
-      while (index < books.getSize() && book.compareTo(books.getElementAt(index)) < 0) {
-        index++;
-      }
-      index++;
-      if (index >= books.getSize()) {
-        books.addElement(book);
-      } else {
-        books.insertElementAt(book, index);
-      }
+      books.addElement(book);
       book.registerListener(this);
-      fireDataChange();
+      fireDataChange(DataChangeEvent.BOOKS_CHANGED);
     }
   }
 
@@ -207,17 +200,26 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     if (books.contains(book)) {
       books.removeElement(book);
       book.unregisterListener(this);
-      fireDataChange();
+      fireDataChange(DataChangeEvent.BOOKS_CHANGED);
     }
   }
 
-  private void fireDataChange() {
+  private void fireDataChange(DataChangeEvent event) {
+    if (event == DataChangeEvent.BOOKS_CHANGED || event == DataChangeEvent.BOOK_TITLE) {
+      sortBooks();
+    }
     unsavedChanges = true;
-    dataChangeListeners.forEach(l -> l.dataChanged());
+    dataChangeListeners.forEach(l -> l.dataChanged(event));
   }
 
   private void fireFileChange() {
     fileChangeListeners.forEach(l -> l.fileChanged(openedFile));
+  }
+
+  private void sortBooks() {
+    List<Book> sorted = Collections.list(books.elements()).stream().sorted().collect(Collectors.toList());
+    books.clear();
+    sorted.forEach(b -> books.addElement(b));
   }
 
   /**
@@ -237,8 +239,8 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
   }
 
   @Override
-  public void dataChanged() {
-    fireDataChange();
+  public void dataChanged(DataChangeEvent event) {
+    fireDataChange(event);
   }
 
   @Override
