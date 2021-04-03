@@ -80,7 +80,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
   public void setTitle(String title) {
     if (!this.title.equals(title)) {
       this.title = title;
-      fireDataChange();
+      fireDataChange(DataChangeEvent.BOOK_TITLE);
     }
   }
 
@@ -99,7 +99,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
   public void setAuthor(String author) {
     if (!this.author.equals(author)) {
       this.author = author;
-      fireDataChange();
+      fireDataChange(DataChangeEvent.BOOK_AUTHOR);
     }
   }
 
@@ -135,7 +135,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
     if (!sections.contains(section)) {
       sections.addElement(section);
       section.registerListener(this);
-      fireDataChange();
+      fireDataChange(DataChangeEvent.SECTIONS_CHANGED);
     }
   }
 
@@ -147,7 +147,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
     if (sections.contains(section)) {
       sections.removeElement(section);
       section.unregisterListener(this);
-      fireDataChange();
+      fireDataChange(DataChangeEvent.SECTIONS_CHANGED);
     }
   }
 
@@ -160,14 +160,14 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
     return sections.contains(section);
   }
 
-  private void fireDataChange() {
+  private void fireDataChange(DataChangeEvent event) {
     modified = LocalDateTime.now();
-    listeners.forEach(DataChangeListener::dataChanged);
+    listeners.forEach(l -> l.dataChanged(event));
   }
 
   @Override
-  public void dataChanged() {
-    fireDataChange();
+  public void dataChanged(DataChangeEvent event) {
+    fireDataChange(event);
   }
 
   @Override
@@ -184,7 +184,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   @Override
   public int compareTo(Book book) {
-    return book.getTitle().compareTo(this.title);
+    return this.title.compareToIgnoreCase(book.getTitle());
   }
 
   @Override

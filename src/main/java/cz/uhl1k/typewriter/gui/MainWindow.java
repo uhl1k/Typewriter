@@ -24,6 +24,7 @@ import cz.uhl1k.typewriter.export.TextExporter;
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.Chapter;
 import cz.uhl1k.typewriter.model.Data;
+import cz.uhl1k.typewriter.model.DataChangeEvent;
 import cz.uhl1k.typewriter.model.DataChangeListener;
 import cz.uhl1k.typewriter.model.FileChangeListener;
 import cz.uhl1k.typewriter.model.Poem;
@@ -669,7 +670,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
   }
 
   @Override
-  public void dataChanged() {
+  public void dataChanged(DataChangeEvent event) {
     books.updateUI();
     sections.updateUI();
 

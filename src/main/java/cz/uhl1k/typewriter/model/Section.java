@@ -49,7 +49,7 @@ public abstract class Section implements XmlSerializable, DataChangeSource {
   public void setTitle(String title) {
     if (!this.title.equals(title)) {
       this.title = title;
-      fireDataChange();
+      fireDataChange(DataChangeEvent.CHAPTER_TITLE);
       modified = LocalDateTime.now();
     }
   }
@@ -69,7 +69,7 @@ public abstract class Section implements XmlSerializable, DataChangeSource {
   public void setContent(String content) {
     if (!this.content.equals(content)) {
       this.content = content;
-      fireDataChange();
+      fireDataChange(DataChangeEvent.CHAPTER_CONTENT);
       modified = LocalDateTime.now();
     }
   }
@@ -102,8 +102,8 @@ public abstract class Section implements XmlSerializable, DataChangeSource {
     listeners.remove(listener);
   }
 
-  private void fireDataChange() {
-    listeners.forEach(l -> l.dataChanged());
+  private void fireDataChange(DataChangeEvent event) {
+    listeners.forEach(l -> l.dataChanged(event));
   }
 
   @Override

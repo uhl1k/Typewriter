@@ -25,5 +25,5 @@ public interface DataChangeListener {
   /**
    * Called when there is a data change.
    */
-  void dataChanged();
+  void dataChanged(DataChangeEvent event);
 }
