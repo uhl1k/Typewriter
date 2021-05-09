@@ -160,6 +160,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     file.addSeparator();
 
     var exportText = new JMenuItem(bundle.getString("exportText"));
+    exportText.addActionListener(e -> exportText());
     file.add(exportText);
 
     file.addSeparator();
@@ -184,6 +185,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     help.add(license);
 
     var about = new JMenuItem(bundle.getString("about"));
+    about.addActionListener(e -> new AboutWindow());
     help.add(about);
 
     return menu;
