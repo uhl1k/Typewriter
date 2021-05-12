@@ -24,6 +24,12 @@ import cz.uhl1k.typewriter.gui.MainWindow;
  * Main class of the typewriter application.
  */
 public class Typewriter {
+
+  /**
+   * Version of the application
+   */
+  public static final String version = "0.8 ALPHA";
+
   /**
    * Main method of this application.
    * @param args Arguments from command line.
