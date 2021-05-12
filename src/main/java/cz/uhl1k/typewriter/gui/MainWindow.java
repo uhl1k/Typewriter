@@ -660,7 +660,6 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
         TextExporter exporter = ExporterFactory.getNewTextExporter();
         exporter.exportToFile(books.getSelectedValue(), file);
       } catch (Exception ex) {
-        ex.printStackTrace();
         JOptionPane.showMessageDialog(
             this,
             bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
