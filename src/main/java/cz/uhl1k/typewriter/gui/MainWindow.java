@@ -185,7 +185,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     help.add(license);
 
     var about = new JMenuItem(bundle.getString("about"));
-    about.addActionListener(e -> new AboutWindow());
+    about.addActionListener(e -> new AboutWindow(this));
     help.add(about);
 
     return menu;
@@ -332,7 +332,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
   private void editBook() {
     if (books.getSelectedIndex() >= 0) {
-      new EditBook(books.getSelectedValue());
+      new EditBook(books.getSelectedValue(), this);
     } else {
       JOptionPane.showMessageDialog(
           this,
@@ -445,7 +445,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
   private void editSection() {
     if (sections.getSelectedIndex() >= 0) {
-      new EditSection(sections.getSelectedValue());
+      new EditSection(sections.getSelectedValue(), this);
     } else {
       JOptionPane.showMessageDialog(
           this,
