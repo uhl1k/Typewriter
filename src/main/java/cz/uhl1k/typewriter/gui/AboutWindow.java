@@ -20,10 +20,10 @@ public class AboutWindow extends JDialog {
     super();
 
     buildGui();
-    pack();
+    //pack();
 
     setLocationRelativeTo(parent);
-    setMinimumSize(new Dimension(300, 100));
+    setMinimumSize(new Dimension(300, 250));
     setModal(true);
     setResizable(false);
     setTitle(bundle.getString("aboutTypewriter"));
