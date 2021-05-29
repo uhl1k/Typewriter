@@ -29,6 +29,14 @@ import cz.uhl1k.typewriter.model.DataChangeListener;
 import cz.uhl1k.typewriter.model.FileChangeListener;
 import cz.uhl1k.typewriter.model.Poem;
 import cz.uhl1k.typewriter.model.Section;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import javax.swing.DefaultListModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -178,7 +186,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     var helpI = new JMenuItem(bundle.getString("help"));
     helpI.setAccelerator(KeyStroke.getKeyStroke('H', InputEvent.CTRL_DOWN_MASK));
     help.add(helpI);
-
+    helpI.addActionListener(e -> showHelp());
     help.addSeparator();
 
     var license = new JMenuItem(bundle.getString("license"));
@@ -667,6 +675,20 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             bundle.getString("error"),
             JOptionPane.ERROR_MESSAGE
         );
+      }
+    }
+  }
+
+  private void showHelp() {
+    Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+    if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+      try {
+        File tmp = File.createTempFile("TYPEWRITER", ".html");
+        tmp.deleteOnExit();
+        Files.copy(getClass().getResourceAsStream("/text/help.html"), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        desktop.browse(tmp.toURI());
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
   }
