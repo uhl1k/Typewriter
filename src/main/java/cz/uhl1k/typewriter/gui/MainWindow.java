@@ -29,6 +29,9 @@ import cz.uhl1k.typewriter.model.DataChangeListener;
 import cz.uhl1k.typewriter.model.FileChangeListener;
 import cz.uhl1k.typewriter.model.Poem;
 import cz.uhl1k.typewriter.model.Section;
+import java.awt.Desktop;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import javax.swing.DefaultListModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -160,6 +163,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     file.addSeparator();
 
     var exportText = new JMenuItem(bundle.getString("exportText"));
+    exportText.addActionListener(e -> exportText());
     file.add(exportText);
 
     file.addSeparator();
@@ -177,13 +181,15 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     var helpI = new JMenuItem(bundle.getString("help"));
     helpI.setAccelerator(KeyStroke.getKeyStroke('H', InputEvent.CTRL_DOWN_MASK));
     help.add(helpI);
-
+    helpI.addActionListener(e -> showHelp());
     help.addSeparator();
 
     var license = new JMenuItem(bundle.getString("license"));
+    license.addActionListener(e -> new LicenseWindow(this));
     help.add(license);
 
     var about = new JMenuItem(bundle.getString("about"));
+    about.addActionListener(e -> new AboutWindow(this));
     help.add(about);
 
     return menu;
@@ -330,7 +336,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
   private void editBook() {
     if (books.getSelectedIndex() >= 0) {
-      new EditBook(books.getSelectedValue());
+      new EditBook(books.getSelectedValue(), this);
     } else {
       JOptionPane.showMessageDialog(
           this,
@@ -443,7 +449,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
   private void editSection() {
     if (sections.getSelectedIndex() >= 0) {
-      new EditSection(sections.getSelectedValue());
+      new EditSection(sections.getSelectedValue(), this);
     } else {
       JOptionPane.showMessageDialog(
           this,
@@ -658,13 +664,26 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
         TextExporter exporter = ExporterFactory.getNewTextExporter();
         exporter.exportToFile(books.getSelectedValue(), file);
       } catch (Exception ex) {
-        ex.printStackTrace();
         JOptionPane.showMessageDialog(
             this,
             bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
             bundle.getString("error"),
             JOptionPane.ERROR_MESSAGE
         );
+      }
+    }
+  }
+
+  private void showHelp() {
+    Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+    if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+      try {
+        File tmp = File.createTempFile("TYPEWRITER", ".html");
+        tmp.deleteOnExit();
+        Files.copy(getClass().getResourceAsStream("/text/help.html"), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        desktop.browse(tmp.toURI());
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
   }

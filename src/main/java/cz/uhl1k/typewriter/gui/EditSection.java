@@ -22,6 +22,7 @@ import cz.uhl1k.typewriter.model.Section;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -48,7 +49,7 @@ public class EditSection extends JDialog {
    * Creates and opens a new dialog for editing section.
    * @param section Section to edit.
    */
-  public EditSection(Section section) {
+  public EditSection(Section section, JFrame parent) {
     this.section = section;
 
     setLayout(new GridLayout(3, 1));
@@ -56,6 +57,9 @@ public class EditSection extends JDialog {
 
     add(new JLabel(bundle.getString("title"), SwingConstants.CENTER));
     title = new JTextField(section.getTitle());
+    title.setBorder(BorderFactory.createCompoundBorder(
+        title.getBorder(),
+        BorderFactory.createEmptyBorder(5,5,5,5)));
     title.getDocument().addDocumentListener(new DocumentListener() {
       @Override
       public void insertUpdate(DocumentEvent e) {
@@ -82,6 +86,7 @@ public class EditSection extends JDialog {
     ));
     add(ok);
 
+    setLocationRelativeTo(parent);
     setResizable(false);
     setMinimumSize(new Dimension(250, 10));
     pack();

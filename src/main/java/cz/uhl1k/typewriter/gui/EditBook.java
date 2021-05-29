@@ -23,6 +23,7 @@ import cz.uhl1k.typewriter.model.Data;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -50,7 +51,7 @@ public class EditBook extends JDialog {
    * Creates and opens a new dialog for editing book.
    * @param book Book to edit.
    */
-  public EditBook(Book book) {
+  public EditBook(Book book, JFrame parent) {
     this.book = book;
 
     setLayout(new GridLayout(5, 1));
@@ -58,6 +59,9 @@ public class EditBook extends JDialog {
 
     add(new JLabel(bundle.getString("title"), SwingConstants.CENTER));
     title = new JTextField(book.getTitle());
+    title.setBorder(BorderFactory.createCompoundBorder(
+        title.getBorder(),
+        BorderFactory.createEmptyBorder(5,5,5,5)));
     title.getDocument().addDocumentListener(new DocumentListener() {
       @Override
       public void insertUpdate(DocumentEvent e) {
@@ -78,6 +82,9 @@ public class EditBook extends JDialog {
 
     add(new JLabel(bundle.getString("author"), SwingConstants.CENTER));
     author = new JTextField(book.getAuthor());
+    author.setBorder(BorderFactory.createCompoundBorder(
+        author.getBorder(),
+        BorderFactory.createEmptyBorder(5,5,5,5)));
     author.getDocument().addDocumentListener(new DocumentListener() {
       @Override
       public void insertUpdate(DocumentEvent e) {
@@ -104,8 +111,9 @@ public class EditBook extends JDialog {
     ));
     add(ok);
 
+    setLocationRelativeTo(parent);
     setResizable(false);
-    setMinimumSize(new Dimension(200, 50));
+    setMinimumSize(new Dimension(250, 50));
     pack();
     setModal(true);
     setTitle(bundle.getString("bookEditing") + " " + book.getTitle());
@@ -118,6 +126,7 @@ public class EditBook extends JDialog {
         title.getText().length() > 0
     ) {
       book.setTitle(title.getText());
+      setTitle(bundle.getString("bookEditing") + " " + title.getText());
     }
   }
 
