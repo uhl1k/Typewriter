@@ -182,6 +182,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     help.addSeparator();
 
     var license = new JMenuItem(bundle.getString("license"));
+    license.addActionListener(e -> new LicenseWindow(this));
     help.add(license);
 
     var about = new JMenuItem(bundle.getString("about"));
