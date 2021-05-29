@@ -18,29 +18,28 @@
 
 package cz.uhl1k.typewriter.model;
 
-import javax.swing.DefaultListModel;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
-/**
- * Representation of book in typewriter.
- */
-public class Book implements DataChangeSource, DataChangeListener, Comparable<Book>, XmlSerializable {
+/** Representation of book in typewriter. */
+public class Book
+    implements DataChangeSource, DataChangeListener, Comparable<Book>, XmlSerializable {
 
-  private String title;
-  private String author;
   private final LocalDateTime created;
-  private LocalDateTime modified;
-
   private final List<DataChangeListener> listeners;
   private final DefaultListModel<Section> sections;
+  private String title;
+  private String author;
+  private LocalDateTime modified;
 
   /**
    * Creates a new book with given parameters.
+   *
    * @param title Title of the book.
    * @param author Author of the book.
    */
@@ -50,6 +49,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Creates a new book with given parameters.
+   *
    * @param title Title of the book.
    * @param author Author of the book.
    * @param created Creation date of the book.
@@ -67,6 +67,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Returns the title of the book.
+   *
    * @return The title of the book.
    */
   public String getTitle() {
@@ -75,6 +76,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Sets a new title of the book. If the new title is same as the old one, nothing happens.
+   *
    * @param title New title of the book.
    */
   public void setTitle(String title) {
@@ -86,6 +88,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Returns the author of the book.
+   *
    * @return The author of the book.
    */
   public String getAuthor() {
@@ -94,6 +97,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Sets new author of the book. If the new author is same as the old one, nothing happens.
+   *
    * @param author New author of the book.
    */
   public void setAuthor(String author) {
@@ -105,6 +109,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Returns the date of creation.
+   *
    * @return The date of creation.
    */
   public LocalDateTime getCreated() {
@@ -113,6 +118,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Returns the date of last modification.
+   *
    * @return The date of last modification.
    */
   public LocalDateTime getModified() {
@@ -121,6 +127,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Returns all the sections (chapters and poems) in the book.
+   *
    * @return All the sections (chapters and poems) in the book.
    */
   public DefaultListModel<Section> getSections() {
@@ -129,6 +136,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Adds section to the book. If there is a section with a same name, nothing will happen.
+   *
    * @param section Section to add.
    */
   public void addSection(Section section) {
@@ -141,6 +149,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Removes section from the book. If there is no section with same name, nothing will happen.
+   *
    * @param section Section to remove.
    */
   public void removeSection(Section section) {
@@ -153,6 +162,7 @@ public class Book implements DataChangeSource, DataChangeListener, Comparable<Bo
 
   /**
    * Tells weather the book contains given section.
+   *
    * @param section Section to look for.
    * @return TRUE if book contains given section, FALSE otherwise.
    */

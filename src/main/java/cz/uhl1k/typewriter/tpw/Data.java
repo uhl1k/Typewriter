@@ -16,15 +16,15 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package cz.uhl1k.typewriter.model;
+package cz.uhl1k.typewriter.tpw;
 
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
-import org.xml.sax.SAXException;
-import javax.swing.DefaultListModel;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import cz.uhl1k.typewriter.model.Book;
+import cz.uhl1k.typewriter.model.DataChangeEvent;
+import cz.uhl1k.typewriter.model.DataChangeListener;
+import cz.uhl1k.typewriter.model.DataChangeSource;
+import cz.uhl1k.typewriter.model.FileChangeListener;
+import cz.uhl1k.typewriter.model.FileChangeSource;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -33,19 +33,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.DefaultListModel;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import org.xml.sax.SAXException;
 
-/**
- * Class for manipulation with data. This class is singleton.
- */
-public final class Data implements DataChangeListener, DataChangeSource, FileChangeSource{
+/** Class for manipulation with data. This class is singleton. */
+public final class Data implements DataChangeListener, DataChangeSource, FileChangeSource {
 
+  private static Data instance;
   private File openedFile;
   private boolean unsavedChanges;
-  private DefaultListModel<Book> books;
-  private static Data instance;
-
-  private List<DataChangeListener> dataChangeListeners;
-  private List<FileChangeListener> fileChangeListeners;
+  private final DefaultListModel<Book> books;
+  private final List<DataChangeListener> dataChangeListeners;
+  private final List<FileChangeListener> fileChangeListeners;
 
   private Data() {
     unsavedChanges = false;
@@ -56,10 +59,11 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
   /**
    * Returns the only instance of this class.
+   *
    * @return The only instance of this class.
    */
   public static Data getInstance() {
-    if(instance == null) {
+    if (instance == null) {
       synchronized (Data.class) {
         if (instance == null) {
           instance = new Data();
@@ -69,13 +73,11 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     return instance;
   }
 
-  public void load(File file) {
-
-  }
+  public void load(File file) {}
 
   /**
-   * Saves
-   * data to a current file.
+   * Saves data to a current file.
+   *
    * @throws NoFileSpecifiedException When there is no current file specified.
    * @throws IOException When an error occurred when saving file.
    */
@@ -86,8 +88,9 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
     try {
-      XMLStreamWriter writer = factory.createXMLStreamWriter(new BufferedWriter(new FileWriter(openedFile)));
-      writer.writeStartDocument("UTF-8","1.0");
+      XMLStreamWriter writer =
+          factory.createXMLStreamWriter(new BufferedWriter(new FileWriter(openedFile)));
+      writer.writeStartDocument("UTF-8", "1.0");
       writer.writeStartElement("library");
 
       writer.writeStartElement("meta");
@@ -114,6 +117,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
   /**
    * Saves data to anew file and sets this file as a opened file.
+   *
    * @param file File to save to and set as opened file.
    * @throws IOException When an error occurred during saving file.
    */
@@ -129,6 +133,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
   /**
    * Opens a new file. If there is file opened, it will be closed without saving changes.
+   *
    * @param file File to open.
    * @throws SAXException When an error occurred when parsing the file.
    * @throws IOException When an error occurred when opening the file.
@@ -145,9 +150,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     unsavedChanges = false;
   }
 
-  /**
-   * Clears the data.
-   */
+  /** Clears the data. */
   public void clear() {
     books.clear();
     unsavedChanges = false;
@@ -157,6 +160,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
   /**
    * Tells weather there are unsaved changes in the data.
+   *
    * @return TRUE if there are unsaved changes, FALSE otherwise.
    */
   public boolean hasUnsavedChanges() {
@@ -165,6 +169,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
   /**
    * Returns all the books.
+   *
    * @return All the books.
    */
   public DefaultListModel<Book> getBooks() {
@@ -173,6 +178,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
   /**
    * Adds a new book. If there is a book with a same name, nothing will happen.
+   *
    * @param book A new book to add.
    */
   public void addBook(Book book) {
@@ -185,6 +191,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
   /**
    * Tells weather there is a book with same name.
+   *
    * @param book Book to look for.
    * @return TRUE if there is a book with a same name, FALSE otherwise.
    */
@@ -194,6 +201,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
   /**
    * Removes book. If there is no book with a same name, nothing will happen.
+   *
    * @param book Book to remove.
    */
   public void removeBook(Book book) {
@@ -217,13 +225,15 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
   }
 
   private void sortBooks() {
-    List<Book> sorted = Collections.list(books.elements()).stream().sorted().collect(Collectors.toList());
+    List<Book> sorted =
+        Collections.list(books.elements()).stream().sorted().collect(Collectors.toList());
     books.clear();
     sorted.forEach(b -> books.addElement(b));
   }
 
   /**
    * Tells weather a file is opened.
+   *
    * @return TRUE if file is opened, FALSE otherwise.
    */
   public File getOpenedFile() {
@@ -232,6 +242,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
 
   /**
    * Returns the opened file.
+   *
    * @return Opened file or null if no file is opened.
    */
   public boolean hasOpenedFile() {

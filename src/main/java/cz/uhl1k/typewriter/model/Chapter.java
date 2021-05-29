@@ -18,18 +18,17 @@
 
 package cz.uhl1k.typewriter.model;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
-/**
- * Representation of chapter in typewriter.
- */
+/** Representation of chapter in typewriter. */
 public class Chapter extends Section {
 
   /**
    * Creates a new chapter with given parameters.
+   *
    * @param title Title of the chapter.
    */
   public Chapter(String title) {
@@ -38,6 +37,7 @@ public class Chapter extends Section {
 
   /**
    * Creates a new chapter with given parameters.
+   *
    * @param title Title of the new chapter.
    * @param content Content of the new chapter.
    */
@@ -47,6 +47,7 @@ public class Chapter extends Section {
 
   /**
    * Creates a new chapter with given parameters.
+   *
    * @param title Title of the new chapter.
    * @param content Content of the new chapter.
    * @param created Date of creation of the chapter.

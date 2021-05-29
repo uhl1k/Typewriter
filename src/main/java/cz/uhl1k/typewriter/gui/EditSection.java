@@ -19,6 +19,9 @@
 package cz.uhl1k.typewriter.gui;
 
 import cz.uhl1k.typewriter.model.Section;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -30,23 +33,17 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.util.ResourceBundle;
 
-/**
- * Dialog for editing Section.
- */
+/** Dialog for editing Section. */
 public class EditSection extends JDialog {
 
   ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
-
-  private JTextField title;
-
   Section section;
+  private final JTextField title;
 
   /**
    * Creates and opens a new dialog for editing section.
+   *
    * @param section Section to edit.
    */
   public EditSection(Section section, JFrame parent) {
@@ -57,33 +54,35 @@ public class EditSection extends JDialog {
 
     add(new JLabel(bundle.getString("title"), SwingConstants.CENTER));
     title = new JTextField(section.getTitle());
-    title.setBorder(BorderFactory.createCompoundBorder(
-        title.getBorder(),
-        BorderFactory.createEmptyBorder(5,5,5,5)));
-    title.getDocument().addDocumentListener(new DocumentListener() {
-      @Override
-      public void insertUpdate(DocumentEvent e) {
-        titleChanged();
-      }
+    title.setBorder(
+        BorderFactory.createCompoundBorder(
+            title.getBorder(), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+    title
+        .getDocument()
+        .addDocumentListener(
+            new DocumentListener() {
+              @Override
+              public void insertUpdate(DocumentEvent e) {
+                titleChanged();
+              }
 
-      @Override
-      public void removeUpdate(DocumentEvent e) {
-        titleChanged();
-      }
+              @Override
+              public void removeUpdate(DocumentEvent e) {
+                titleChanged();
+              }
 
-      @Override
-      public void changedUpdate(DocumentEvent e) {
-        titleChanged();
-      }
-    });
+              @Override
+              public void changedUpdate(DocumentEvent e) {
+                titleChanged();
+              }
+            });
     add(title);
 
     JButton ok = new JButton(bundle.getString("ok"));
     ok.addActionListener(e -> clickedOk());
-    ok.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createEmptyBorder(10, 0, 0, 0),
-        ok.getBorder()
-    ));
+    ok.setBorder(
+        BorderFactory.createCompoundBorder(
+            BorderFactory.createEmptyBorder(10, 0, 0, 0), ok.getBorder()));
     add(ok);
 
     setLocationRelativeTo(parent);
@@ -99,7 +98,7 @@ public class EditSection extends JDialog {
     section.setTitle(title.getText());
   }
 
-  private void clickedOk () {
+  private void clickedOk() {
     dispose();
   }
 }

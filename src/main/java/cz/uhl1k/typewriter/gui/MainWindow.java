@@ -23,19 +23,24 @@ import cz.uhl1k.typewriter.export.ExporterFactory;
 import cz.uhl1k.typewriter.export.TextExporter;
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.Chapter;
-import cz.uhl1k.typewriter.model.Data;
+import cz.uhl1k.typewriter.tpw.Data;
 import cz.uhl1k.typewriter.model.DataChangeEvent;
 import cz.uhl1k.typewriter.model.DataChangeListener;
 import cz.uhl1k.typewriter.model.FileChangeListener;
 import cz.uhl1k.typewriter.model.Poem;
 import cz.uhl1k.typewriter.model.Section;
+import java.awt.BorderLayout;
 import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ResourceBundle;
 import javax.swing.DefaultListModel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -49,18 +54,11 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.util.ResourceBundle;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-/**
- * The main window of this application.
- */
+/** The main window of this application. */
 public class MainWindow extends JFrame implements DataChangeListener, FileChangeListener {
 
   ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
@@ -69,9 +67,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
   JList<Section> sections;
   JTextArea content;
 
-  /**
-   * Creates and shows a main window.
-   */
+  /** Creates and shows a main window. */
   public MainWindow() {
     buildGui();
 
@@ -81,12 +77,13 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     books.setModel(Data.getInstance().getBooks());
 
     setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-    addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        close();
-      }
-    });
+    addWindowListener(
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent e) {
+            close();
+          }
+        });
 
     setMinimumSize(new Dimension(600, 400));
     setTitle(bundle.getString("typewriter"));
@@ -105,22 +102,25 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
     books.addListSelectionListener(e -> bookSelectionChanged());
     sections.addListSelectionListener(e -> sectionSelectionChanged());
-    content.getDocument().addDocumentListener(new DocumentListener() {
-      @Override
-      public void insertUpdate(DocumentEvent e) {
-        textChanged();
-      }
+    content
+        .getDocument()
+        .addDocumentListener(
+            new DocumentListener() {
+              @Override
+              public void insertUpdate(DocumentEvent e) {
+                textChanged();
+              }
 
-      @Override
-      public void removeUpdate(DocumentEvent e) {
-        textChanged();
-      }
+              @Override
+              public void removeUpdate(DocumentEvent e) {
+                textChanged();
+              }
 
-      @Override
-      public void changedUpdate(DocumentEvent e) {
-        textChanged();
-      }
-    });
+              @Override
+              public void changedUpdate(DocumentEvent e) {
+                textChanged();
+              }
+            });
 
     content.setEnabled(false);
 
@@ -230,7 +230,8 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     editSection.addActionListener(e -> editSection());
     toolBar.add(editSection);
 
-    var deleteSection = new JButton(new ImageIcon(getClass().getResource("/ico/deleteSection.png")));
+    var deleteSection =
+        new JButton(new ImageIcon(getClass().getResource("/ico/deleteSection.png")));
     deleteSection.setToolTipText(bundle.getString("deleteSection"));
     deleteSection.addActionListener(e -> removeSection());
     toolBar.add(deleteSection);
@@ -257,15 +258,18 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
   private void close() {
     if (Data.getInstance().hasUnsavedChanges()) {
-      int option = JOptionPane.showOptionDialog(
-          this,
-          bundle.getString("unsavedChanges"),
-          bundle.getString("quitQuestion"),
-          JOptionPane.YES_NO_CANCEL_OPTION,
-          JOptionPane.WARNING_MESSAGE,
-          null,
-          new String[]{bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")},
-          0);
+      int option =
+          JOptionPane.showOptionDialog(
+              this,
+              bundle.getString("unsavedChanges"),
+              bundle.getString("quitQuestion"),
+              JOptionPane.YES_NO_CANCEL_OPTION,
+              JOptionPane.WARNING_MESSAGE,
+              null,
+              new String[] {
+                bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")
+              },
+              0);
 
       switch (option) {
         case 0:
@@ -290,8 +294,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           this,
           bundle.getString("shortBookName"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
 
     var book = new Book(name, System.getProperty("user.name"));
@@ -303,23 +306,22 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           this,
           bundle.getString("existingBook"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
   private void removeBook() {
     if (books.getSelectedIndex() >= 0) {
-      int option = JOptionPane.showOptionDialog(
-          this,
-          bundle.getString("reallyDeleteBook"),
-          bundle.getString("areYouSure"),
-          JOptionPane.DEFAULT_OPTION,
-          JOptionPane.WARNING_MESSAGE,
-          null,
-          new String[]{bundle.getString("yes"), bundle.getString("no")},
-          1
-      );
+      int option =
+          JOptionPane.showOptionDialog(
+              this,
+              bundle.getString("reallyDeleteBook"),
+              bundle.getString("areYouSure"),
+              JOptionPane.DEFAULT_OPTION,
+              JOptionPane.WARNING_MESSAGE,
+              null,
+              new String[] {bundle.getString("yes"), bundle.getString("no")},
+              1);
 
       if (option == 0) {
         Data.getInstance().removeBook(books.getSelectedValue());
@@ -329,8 +331,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           this,
           bundle.getString("noBookSelected"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -342,8 +343,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           this,
           bundle.getString("noBookSelected"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -358,8 +358,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             this,
             bundle.getString("shortChapterName"),
             bundle.getString("error"),
-            JOptionPane.ERROR_MESSAGE
-        );
+            JOptionPane.ERROR_MESSAGE);
       }
 
       var chapter = new Chapter(name);
@@ -371,16 +370,14 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             this,
             bundle.getString("existingChapterOrPoem"),
             bundle.getString("error"),
-            JOptionPane.ERROR_MESSAGE
-        );
+            JOptionPane.ERROR_MESSAGE);
       }
     } else {
       JOptionPane.showMessageDialog(
           this,
           bundle.getString("noBookSelected"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -395,8 +392,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             this,
             bundle.getString("shortPoemName"),
             bundle.getString("error"),
-            JOptionPane.ERROR_MESSAGE
-        );
+            JOptionPane.ERROR_MESSAGE);
       }
 
       var poem = new Poem(name);
@@ -408,31 +404,29 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             this,
             bundle.getString("existingChapterOrPoem"),
             bundle.getString("error"),
-            JOptionPane.ERROR_MESSAGE
-        );
+            JOptionPane.ERROR_MESSAGE);
       }
     } else {
       JOptionPane.showMessageDialog(
           this,
           bundle.getString("noBookSelected"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
   private void removeSection() {
     if (sections.getSelectedIndex() >= 0) {
-      int option = JOptionPane.showOptionDialog(
-          this,
-          bundle.getString("reallyDeleteSection"),
-          bundle.getString("areYouSure"),
-          JOptionPane.DEFAULT_OPTION,
-          JOptionPane.WARNING_MESSAGE,
-          null,
-          new String[]{bundle.getString("yes"), bundle.getString("no")},
-          1
-      );
+      int option =
+          JOptionPane.showOptionDialog(
+              this,
+              bundle.getString("reallyDeleteSection"),
+              bundle.getString("areYouSure"),
+              JOptionPane.DEFAULT_OPTION,
+              JOptionPane.WARNING_MESSAGE,
+              null,
+              new String[] {bundle.getString("yes"), bundle.getString("no")},
+              1);
 
       if (option == 0) {
         books.getSelectedValue().removeSection(sections.getSelectedValue());
@@ -442,8 +436,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           this,
           bundle.getString("noSectionSelected"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -455,8 +448,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           this,
           bundle.getString("noSectionSelected"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -464,7 +456,10 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     if (sections.getSelectedIndex() > 0) {
       int index = sections.getSelectedIndex();
       var temp = books.getSelectedValue().getSections().get(index);
-      books.getSelectedValue().getSections().set(index, books.getSelectedValue().getSections().get(index - 1));
+      books
+          .getSelectedValue()
+          .getSections()
+          .set(index, books.getSelectedValue().getSections().get(index - 1));
       books.getSelectedValue().getSections().set(index - 1, temp);
       sections.setSelectedIndex(index - 1);
     } else if (sections.getSelectedIndex() == 0) {
@@ -472,39 +467,39 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           this,
           bundle.getString("firstCannotBeMoved"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     } else {
       JOptionPane.showMessageDialog(
           this,
           bundle.getString("noSectionSelected"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
   private void moveDown() {
-    if (sections.getSelectedIndex() < sections.getModel().getSize() - 1 && sections.getSelectedIndex() >= 0) {
+    if (sections.getSelectedIndex() < sections.getModel().getSize() - 1
+        && sections.getSelectedIndex() >= 0) {
       int index = sections.getSelectedIndex();
       var temp = books.getSelectedValue().getSections().get(index);
-      books.getSelectedValue().getSections().set(index, books.getSelectedValue().getSections().get(index+1));
-      books.getSelectedValue().getSections().set(index+1, temp);
-      sections.setSelectedIndex(index+1);
+      books
+          .getSelectedValue()
+          .getSections()
+          .set(index, books.getSelectedValue().getSections().get(index + 1));
+      books.getSelectedValue().getSections().set(index + 1, temp);
+      sections.setSelectedIndex(index + 1);
     } else if (sections.getSelectedIndex() == sections.getModel().getSize() - 1) {
       JOptionPane.showMessageDialog(
           this,
           bundle.getString("lastCannotBeMoved"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     } else {
       JOptionPane.showMessageDialog(
           this,
           bundle.getString("noSectionSelected"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -538,7 +533,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     try {
       Data.getInstance().save();
       if (getTitle().endsWith("*")) {
-        setTitle(getTitle().substring(0, getTitle().length()-2));
+        setTitle(getTitle().substring(0, getTitle().length() - 2));
       }
     } catch (NoFileSpecifiedException ex) {
       saveAs();
@@ -547,16 +542,16 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           this,
           bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
   private void saveAs() {
     JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setFileFilter(new FileNameExtensionFilter("Typewriter library file (*.tpw)", "tpw"));
+    fileChooser.setFileFilter(
+        new FileNameExtensionFilter("Typewriter library file (*.tpw)", "tpw"));
     int option = fileChooser.showSaveDialog(this);
-    if(option == JFileChooser.APPROVE_OPTION){
+    if (option == JFileChooser.APPROVE_OPTION) {
       try {
         var file = fileChooser.getSelectedFile();
         if (!file.getPath().endsWith(".tpw")) {
@@ -564,30 +559,32 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
         }
         Data.getInstance().saveAs(file);
         if (getTitle().endsWith("*")) {
-          setTitle(getTitle().substring(0, getTitle().length()-2));
+          setTitle(getTitle().substring(0, getTitle().length() - 2));
         }
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(
             this,
             bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
             bundle.getString("error"),
-            JOptionPane.ERROR_MESSAGE
-        );
+            JOptionPane.ERROR_MESSAGE);
       }
     }
   }
 
   private void create() {
     if (Data.getInstance().hasUnsavedChanges()) {
-      int option = JOptionPane.showOptionDialog(
-          this,
-          bundle.getString("unsavedChanges"),
-          bundle.getString("quitQuestion"),
-          JOptionPane.YES_NO_CANCEL_OPTION,
-          JOptionPane.WARNING_MESSAGE,
-          null,
-          new String[]{bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")},
-          0);
+      int option =
+          JOptionPane.showOptionDialog(
+              this,
+              bundle.getString("unsavedChanges"),
+              bundle.getString("quitQuestion"),
+              JOptionPane.YES_NO_CANCEL_OPTION,
+              JOptionPane.WARNING_MESSAGE,
+              null,
+              new String[] {
+                bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")
+              },
+              0);
 
       switch (option) {
         case 0:
@@ -603,15 +600,18 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
   private void open() {
     if (Data.getInstance().hasUnsavedChanges()) {
-      int option = JOptionPane.showOptionDialog(
-          this,
-          bundle.getString("unsavedChanges"),
-          bundle.getString("quitQuestion"),
-          JOptionPane.YES_NO_CANCEL_OPTION,
-          JOptionPane.WARNING_MESSAGE,
-          null,
-          new String[]{bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")},
-          0);
+      int option =
+          JOptionPane.showOptionDialog(
+              this,
+              bundle.getString("unsavedChanges"),
+              bundle.getString("quitQuestion"),
+              JOptionPane.YES_NO_CANCEL_OPTION,
+              JOptionPane.WARNING_MESSAGE,
+              null,
+              new String[] {
+                bundle.getString("yes"), bundle.getString("no"), bundle.getString("cancel")
+              },
+              0);
 
       switch (option) {
         case 0:
@@ -623,21 +623,21 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
       }
     }
     JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setFileFilter(new FileNameExtensionFilter("Typewriter library file (*.tpw)", "tpw"));
+    fileChooser.setFileFilter(
+        new FileNameExtensionFilter("Typewriter library file (*.tpw)", "tpw"));
     int optionSave = fileChooser.showOpenDialog(this);
-    if(optionSave == JFileChooser.APPROVE_OPTION){
+    if (optionSave == JFileChooser.APPROVE_OPTION) {
       try {
         Data.getInstance().open(fileChooser.getSelectedFile());
         if (getTitle().endsWith("*")) {
-          setTitle(getTitle().substring(0, getTitle().length()-2));
+          setTitle(getTitle().substring(0, getTitle().length() - 2));
         }
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(
             this,
             bundle.getString("wrongOpeningFile") + "\n" + ex.getMessage(),
             bundle.getString("error"),
-            JOptionPane.ERROR_MESSAGE
-        );
+            JOptionPane.ERROR_MESSAGE);
       }
     }
   }
@@ -648,14 +648,13 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           this,
           bundle.getString("noBookSelected"),
           bundle.getString("error"),
-          JOptionPane.ERROR_MESSAGE
-      );
+          JOptionPane.ERROR_MESSAGE);
       return;
     }
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setFileFilter(new FileNameExtensionFilter("Plain text file (*.txt)", "txt"));
     int option = fileChooser.showSaveDialog(this);
-    if(option == JFileChooser.APPROVE_OPTION){
+    if (option == JFileChooser.APPROVE_OPTION) {
       try {
         var file = fileChooser.getSelectedFile();
         if (!file.getPath().endsWith(".txt")) {
@@ -668,8 +667,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             this,
             bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
             bundle.getString("error"),
-            JOptionPane.ERROR_MESSAGE
-        );
+            JOptionPane.ERROR_MESSAGE);
       }
     }
   }
@@ -680,7 +678,10 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
       try {
         File tmp = File.createTempFile("TYPEWRITER", ".html");
         tmp.deleteOnExit();
-        Files.copy(getClass().getResourceAsStream("/text/help.html"), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(
+            getClass().getResourceAsStream("/text/help.html"),
+            tmp.toPath(),
+            StandardCopyOption.REPLACE_EXISTING);
         desktop.browse(tmp.toURI());
       } catch (Exception e) {
         e.printStackTrace();

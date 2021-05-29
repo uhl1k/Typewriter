@@ -20,18 +20,15 @@ package cz.uhl1k.typewriter;
 
 import cz.uhl1k.typewriter.gui.MainWindow;
 
-/**
- * Main class of the typewriter application.
- */
+/** Main class of the typewriter application. */
 public class Typewriter {
 
-  /**
-   * Version of the application
-   */
+  /** Version of the application */
   public static final String version = "0.8 ALPHA";
 
   /**
    * Main method of this application.
+   *
    * @param args Arguments from command line.
    */
   public static void main(String... args) {

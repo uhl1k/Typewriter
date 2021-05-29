@@ -19,7 +19,10 @@
 package cz.uhl1k.typewriter.gui;
 
 import cz.uhl1k.typewriter.model.Book;
-import cz.uhl1k.typewriter.model.Data;
+import cz.uhl1k.typewriter.tpw.Data;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -31,24 +34,18 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.util.ResourceBundle;
 
-/**
- * Dialog for editing book.
- */
+/** Dialog for editing book. */
 public class EditBook extends JDialog {
 
   ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
-
-  private JTextField title;
-  private JTextField author;
-
   Book book;
+  private final JTextField title;
+  private final JTextField author;
 
   /**
    * Creates and opens a new dialog for editing book.
+   *
    * @param book Book to edit.
    */
   public EditBook(Book book, JFrame parent) {
@@ -59,56 +56,61 @@ public class EditBook extends JDialog {
 
     add(new JLabel(bundle.getString("title"), SwingConstants.CENTER));
     title = new JTextField(book.getTitle());
-    title.setBorder(BorderFactory.createCompoundBorder(
-        title.getBorder(),
-        BorderFactory.createEmptyBorder(5,5,5,5)));
-    title.getDocument().addDocumentListener(new DocumentListener() {
-      @Override
-      public void insertUpdate(DocumentEvent e) {
-        titleChanged();
-      }
+    title.setBorder(
+        BorderFactory.createCompoundBorder(
+            title.getBorder(), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+    title
+        .getDocument()
+        .addDocumentListener(
+            new DocumentListener() {
+              @Override
+              public void insertUpdate(DocumentEvent e) {
+                titleChanged();
+              }
 
-      @Override
-      public void removeUpdate(DocumentEvent e) {
-        titleChanged();
-      }
+              @Override
+              public void removeUpdate(DocumentEvent e) {
+                titleChanged();
+              }
 
-      @Override
-      public void changedUpdate(DocumentEvent e) {
-        titleChanged();
-      }
-    });
+              @Override
+              public void changedUpdate(DocumentEvent e) {
+                titleChanged();
+              }
+            });
     add(title);
 
     add(new JLabel(bundle.getString("author"), SwingConstants.CENTER));
     author = new JTextField(book.getAuthor());
-    author.setBorder(BorderFactory.createCompoundBorder(
-        author.getBorder(),
-        BorderFactory.createEmptyBorder(5,5,5,5)));
-    author.getDocument().addDocumentListener(new DocumentListener() {
-      @Override
-      public void insertUpdate(DocumentEvent e) {
-        authorChanged();
-      }
+    author.setBorder(
+        BorderFactory.createCompoundBorder(
+            author.getBorder(), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+    author
+        .getDocument()
+        .addDocumentListener(
+            new DocumentListener() {
+              @Override
+              public void insertUpdate(DocumentEvent e) {
+                authorChanged();
+              }
 
-      @Override
-      public void removeUpdate(DocumentEvent e) {
-        authorChanged();
-      }
+              @Override
+              public void removeUpdate(DocumentEvent e) {
+                authorChanged();
+              }
 
-      @Override
-      public void changedUpdate(DocumentEvent e) {
-        authorChanged();
-      }
-    });
+              @Override
+              public void changedUpdate(DocumentEvent e) {
+                authorChanged();
+              }
+            });
     add(author);
 
     JButton ok = new JButton(bundle.getString("ok"));
     ok.addActionListener(e -> clickedOk());
-    ok.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createEmptyBorder(10, 0, 0, 0),
-        ok.getBorder()
-    ));
+    ok.setBorder(
+        BorderFactory.createCompoundBorder(
+            BorderFactory.createEmptyBorder(10, 0, 0, 0), ok.getBorder()));
     add(ok);
 
     setLocationRelativeTo(parent);
@@ -121,10 +123,8 @@ public class EditBook extends JDialog {
   }
 
   private void titleChanged() {
-    if (
-        !Data.getInstance().hasBook(new Book(title.getText(), "")) &&
-        title.getText().length() > 0
-    ) {
+    if (!Data.getInstance().hasBook(new Book(title.getText(), ""))
+        && title.getText().length() > 0) {
       book.setTitle(title.getText());
       setTitle(bundle.getString("bookEditing") + " " + title.getText());
     }
@@ -134,7 +134,7 @@ public class EditBook extends JDialog {
     book.setAuthor(author.getText());
   }
 
-  private void clickedOk () {
+  private void clickedOk() {
     dispose();
   }
 }

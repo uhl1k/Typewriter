@@ -16,8 +16,18 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package cz.uhl1k.typewriter.model;
+package cz.uhl1k.typewriter.tpw;
 
+import cz.uhl1k.typewriter.model.Book;
+import cz.uhl1k.typewriter.model.Chapter;
+import cz.uhl1k.typewriter.model.Poem;
+import cz.uhl1k.typewriter.model.Section;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -26,30 +36,18 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.time.LocalDateTime;
 
-/**
- * Handler for parsing .tpw files.
- */
-class TpwFileHandler {
+/** Handler for parsing .tpw files. */
+public class TpwFileHandler {
+  private static final TpwFileHandler handler = new TpwFileHandler();
   private boolean meta = false;
   private boolean data = false;
   private boolean book = false;
   private boolean chapter = false;
   private boolean poem = false;
-
   private Book lastBook = null;
 
-  private static TpwFileHandler handler = new TpwFileHandler();
-
-  private TpwFileHandler() {
-
-  }
+  private TpwFileHandler() {}
 
   public static TpwFileHandler getHandler() {
     return handler;
@@ -57,7 +55,7 @@ class TpwFileHandler {
 
   public void parseFile(File file) {
     XMLInputFactory factory = XMLInputFactory.newInstance();
-    try (BufferedReader br = new BufferedReader(new FileReader(file))){
+    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
       XMLEventReader reader = factory.createXMLEventReader(br);
 
       while (reader.hasNext()) {
@@ -84,12 +82,14 @@ class TpwFileHandler {
               case "book":
                 if (data) {
                   book = true;
-                  Book book = new Book(
-                      startElement.getAttributeByName(new QName("title")).getValue(),
-                      startElement.getAttributeByName(new QName("author")).getValue(),
-                      LocalDateTime.parse(startElement.getAttributeByName(new QName("created")).getValue()),
-                      LocalDateTime.parse(startElement.getAttributeByName(new QName("modified")).getValue())
-                  );
+                  Book book =
+                      new Book(
+                          startElement.getAttributeByName(new QName("title")).getValue(),
+                          startElement.getAttributeByName(new QName("author")).getValue(),
+                          LocalDateTime.parse(
+                              startElement.getAttributeByName(new QName("created")).getValue()),
+                          LocalDateTime.parse(
+                              startElement.getAttributeByName(new QName("modified")).getValue()));
                   Data.getInstance().addBook(book);
                   lastBook = book;
                 }
@@ -98,12 +98,14 @@ class TpwFileHandler {
               case "poem":
                 if (book) {
                   poem = true;
-                  Poem poem = new Poem(
-                      startElement.getAttributeByName(new QName("title")).getValue(),
-                    "",
-                    LocalDateTime.parse(startElement.getAttributeByName(new QName("created")).getValue()),
-                    LocalDateTime.parse(startElement.getAttributeByName(new QName("modified")).getValue())
-                  );
+                  Poem poem =
+                      new Poem(
+                          startElement.getAttributeByName(new QName("title")).getValue(),
+                          "",
+                          LocalDateTime.parse(
+                              startElement.getAttributeByName(new QName("created")).getValue()),
+                          LocalDateTime.parse(
+                              startElement.getAttributeByName(new QName("modified")).getValue()));
                   lastBook.addSection(poem);
                 }
                 break;
@@ -111,12 +113,14 @@ class TpwFileHandler {
               case "chapter":
                 if (book) {
                   chapter = true;
-                  Chapter chapter = new Chapter(
-                      startElement.getAttributeByName(new QName("title")).getValue(),
-                      "",
-                      LocalDateTime.parse(startElement.getAttributeByName(new QName("created")).getValue()),
-                      LocalDateTime.parse(startElement.getAttributeByName(new QName("modified")).getValue())
-                  );
+                  Chapter chapter =
+                      new Chapter(
+                          startElement.getAttributeByName(new QName("title")).getValue(),
+                          "",
+                          LocalDateTime.parse(
+                              startElement.getAttributeByName(new QName("created")).getValue()),
+                          LocalDateTime.parse(
+                              startElement.getAttributeByName(new QName("modified")).getValue()));
                   lastBook.addSection(chapter);
                 }
                 break;

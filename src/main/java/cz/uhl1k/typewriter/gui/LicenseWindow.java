@@ -32,15 +32,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-/**
- * Dialog showing license information.
- */
+/** Dialog showing license information. */
 public class LicenseWindow extends JDialog {
 
   ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
   /**
    * Builds new license window.
+   *
    * @param parent Parent JFrame.
    */
   public LicenseWindow(JFrame parent) {
@@ -64,7 +63,8 @@ public class LicenseWindow extends JDialog {
   }
 
   private String loadLicenseText() {
-    try (InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream("/text/license"))) {
+    try (InputStreamReader reader =
+        new InputStreamReader(getClass().getResourceAsStream("/text/license"))) {
       return new BufferedReader(reader).lines().collect(Collectors.joining("\n"));
     } catch (IOException ex) {
       JOptionPane.showMessageDialog(

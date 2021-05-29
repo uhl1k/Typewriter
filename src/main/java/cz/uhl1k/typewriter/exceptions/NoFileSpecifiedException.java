@@ -18,9 +18,7 @@
 
 package cz.uhl1k.typewriter.exceptions;
 
-/**
- * Thrown when there is no file specified.
- */
+/** Thrown when there is no file specified. */
 public class NoFileSpecifiedException extends Exception {
   public NoFileSpecifiedException(String description) {
     super(description);

@@ -21,12 +21,11 @@ package cz.uhl1k.typewriter.export;
 import cz.uhl1k.typewriter.model.Book;
 import java.io.File;
 
-/**
- * Abstract exporter class that defines methods in exporters.
- */
+/** Abstract exporter class that defines methods in exporters. */
 public abstract class Exporter {
   /**
    * Export given book to a given file.
+   *
    * @param book Book to export.
    * @param file File to export to.
    */

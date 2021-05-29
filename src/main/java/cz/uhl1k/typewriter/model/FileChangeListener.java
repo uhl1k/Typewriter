@@ -20,12 +20,11 @@ package cz.uhl1k.typewriter.model;
 
 import java.io.File;
 
-/**
- * Listener for changes in currently opened file.
- */
+/** Listener for changes in currently opened file. */
 public interface FileChangeListener {
   /**
    * Currently opened file changed.
+   *
    * @param file New currently opened file.
    */
   void fileChanged(File file);
