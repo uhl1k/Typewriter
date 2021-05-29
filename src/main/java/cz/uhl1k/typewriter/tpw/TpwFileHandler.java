@@ -153,7 +153,7 @@ public class TpwFileHandler {
             break;
           case XMLStreamConstants.CHARACTERS:
             if (poem || chapter) {
-              getLastSection().setContent(event.asCharacters().getData());
+              getLastSection().setContent(getLastSection().getContent() + event.asCharacters().getData());
             }
             break;
         }
