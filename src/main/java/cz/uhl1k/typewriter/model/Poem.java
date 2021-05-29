@@ -18,18 +18,17 @@
 
 package cz.uhl1k.typewriter.model;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
-/**
- * Representation of poem in Typewriter.
- */
+/** Representation of poem in Typewriter. */
 public class Poem extends Section {
 
   /**
    * Creates a new poem with given parameters.
+   *
    * @param title Title of the new poem.
    */
   public Poem(String title) {
@@ -38,6 +37,7 @@ public class Poem extends Section {
 
   /**
    * Creates a new poem with given parameters.
+   *
    * @param title Title of the new poem.
    * @param content Content of the new poem.
    */
@@ -47,6 +47,7 @@ public class Poem extends Section {
 
   /**
    * Creates a new poem with given parameters.
+   *
    * @param title Title of the new poem.
    * @param content Content of the new poem.
    * @param created Date of creation of the new poem.

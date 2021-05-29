@@ -22,9 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Abstract base for Chapter and Poem.
- */
+/** Abstract base for Chapter and Poem. */
 public abstract class Section implements XmlSerializable, DataChangeSource {
   protected String title;
   protected String content;
@@ -32,10 +30,11 @@ public abstract class Section implements XmlSerializable, DataChangeSource {
   protected LocalDateTime created;
   protected LocalDateTime modified;
 
-  private List<DataChangeListener> listeners = new ArrayList<>();
+  private final List<DataChangeListener> listeners = new ArrayList<>();
 
   /**
    * Returns the title.
+   *
    * @return The title.
    */
   public String getTitle() {
@@ -44,6 +43,7 @@ public abstract class Section implements XmlSerializable, DataChangeSource {
 
   /**
    * Sets the title. If the new title is same as the old one, nothing will happen.
+   *
    * @param title New title.
    */
   public void setTitle(String title) {
@@ -56,6 +56,7 @@ public abstract class Section implements XmlSerializable, DataChangeSource {
 
   /**
    * Returns the content.
+   *
    * @return The content.
    */
   public String getContent() {
@@ -64,6 +65,7 @@ public abstract class Section implements XmlSerializable, DataChangeSource {
 
   /**
    * Sets the new content. If the new content is same as the odl one, nothing will happen.
+   *
    * @param content New content.
    */
   public void setContent(String content) {
@@ -76,6 +78,7 @@ public abstract class Section implements XmlSerializable, DataChangeSource {
 
   /**
    * Returns the date of creation.
+   *
    * @return The date of creation.
    */
   public LocalDateTime getCreated() {
@@ -84,6 +87,7 @@ public abstract class Section implements XmlSerializable, DataChangeSource {
 
   /**
    * Returns the date of last modification.
+   *
    * @return The date of last modification.
    */
   public LocalDateTime getModified() {

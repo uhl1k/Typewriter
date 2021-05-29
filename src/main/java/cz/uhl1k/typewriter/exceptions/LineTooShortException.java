@@ -18,9 +18,7 @@
 
 package cz.uhl1k.typewriter.exceptions;
 
-/**
- * Thrown when the length of line was set too short in export.
- */
+/** Thrown when the length of line was set too short in export. */
 public class LineTooShortException extends Exception {
   public LineTooShortException(String description) {
     super(description);

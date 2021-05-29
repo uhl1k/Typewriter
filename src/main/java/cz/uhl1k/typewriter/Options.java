@@ -22,12 +22,11 @@ import cz.uhl1k.typewriter.exceptions.SettingsNotSavedException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Class for handling options and settings of the application. This class is singleton.
- */
+/** Class for handling options and settings of the application. This class is singleton. */
 public class Options {
 
   private static final Options INSTANCE = new Options();
+  private final Map<String, String> settings;
 
   private Options() {
     settings = new HashMap<>();
@@ -35,6 +34,7 @@ public class Options {
 
   /**
    * Returns the only instance of this class.
+   *
    * @return The only instance.
    */
   public static Options getInstance() {
@@ -43,16 +43,16 @@ public class Options {
 
   /**
    * Tells weather the settings were successfully loaded.
+   *
    * @return
    */
   public static boolean isInitialised() {
     return INSTANCE != null;
   }
 
-  private Map<String, String> settings;
-
   /**
    * Gets value from settings for a given key or null if the key is not in settings.
+   *
    * @param key Key to look for.
    * @return Value for given key or null.
    */
@@ -61,7 +61,9 @@ public class Options {
   }
 
   /**
-   * Sets new key-value pair in settings. If there is the key already, the value is overwritten with new value.
+   * Sets new key-value pair in settings. If there is the key already, the value is overwritten with
+   * new value.
+   *
    * @param key Key of the setting.
    * @param value Value of the settings.
    * @throws SettingsNotSavedException Thrown when error occurred while saving settings.

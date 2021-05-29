@@ -21,12 +21,11 @@ package cz.uhl1k.typewriter.model;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-/**
- * Marks the classes that are serializable to XML.
- */
+/** Marks the classes that are serializable to XML. */
 public interface XmlSerializable {
   /**
    * Method for serialization to XML.
+   *
    * @param writer XML writer to write to.
    * @throws XMLStreamException When error occurred while writing xml file.
    */

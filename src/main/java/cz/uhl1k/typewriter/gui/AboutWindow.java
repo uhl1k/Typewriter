@@ -1,3 +1,21 @@
+/*
+  Typewriter - simple novel and poem writing software
+  Copyright (C) 2021  uhl1k (Roman Janků)
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 package cz.uhl1k.typewriter.gui;
 
 import cz.uhl1k.typewriter.Typewriter;
@@ -12,15 +30,20 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+/** Dialog about this application. */
 public class AboutWindow extends JDialog {
 
   ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
+  /**
+   * Opens new about window.
+   * @param parent Parent of this dialog.
+   */
   public AboutWindow(JFrame parent) {
     super();
 
     buildGui();
-    //pack();
+    // pack();
 
     setLocationRelativeTo(parent);
     setMinimumSize(new Dimension(300, 250));

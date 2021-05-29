@@ -27,15 +27,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- * Exporter for exporting to a text file. Default length of line is 75 characters;
- */
-public class TextExporter extends Exporter{
+/** Exporter for exporting to a text file. Default length of line is 75 characters; */
+public class TextExporter extends Exporter {
 
   private int lineLength = 75;
 
   /**
    * Returns the length of line.
+   *
    * @return The length of line.
    */
   public int getLineLength() {
@@ -44,6 +43,7 @@ public class TextExporter extends Exporter{
 
   /**
    * Sets a line length for export. Line must be at least 20 characters long.
+   *
    * @param lineLength New length of a line.
    * @throws LineTooShortException When the line length is too short.
    */
@@ -64,8 +64,10 @@ public class TextExporter extends Exporter{
       for (int i = 0; i < lineLength; i++) {
         writer.printf("=");
       }
-      writer.printf("%n%n          %-" + lineLength + "s%n%n          %-" + lineLength + "s%n%n",
-          book.getTitle(), book.getAuthor());
+      writer.printf(
+          "%n%n          %-" + lineLength + "s%n%n          %-" + lineLength + "s%n%n",
+          book.getTitle(),
+          book.getAuthor());
       for (int i = 0; i < lineLength; i++) {
         writer.printf("=");
       }

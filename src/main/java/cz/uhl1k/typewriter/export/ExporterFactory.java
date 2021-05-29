@@ -18,12 +18,11 @@
 
 package cz.uhl1k.typewriter.export;
 
-/**
- * Factory for exporters.
- */
+/** Factory for exporters. */
 public class ExporterFactory {
   /**
    * Returns a TextExporter that exports to a text file.
+   *
    * @return TextExporter.
    */
   public static TextExporter getNewTextExporter() {

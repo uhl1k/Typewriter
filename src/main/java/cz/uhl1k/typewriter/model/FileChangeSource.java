@@ -18,19 +18,19 @@
 
 package cz.uhl1k.typewriter.model;
 
-/**
- * The source of FileChange events.
- */
+/** The source of FileChange events. */
 public interface FileChangeSource {
   /**
    * Register a new listener.
+   *
    * @param listener Listener to register.
    */
-  void registerListener (FileChangeListener listener);
+  void registerListener(FileChangeListener listener);
 
   /**
    * Unregister a listener.
+   *
    * @param listener Listener to unregister.
    */
-  void unregisterListener (FileChangeListener listener);
+  void unregisterListener(FileChangeListener listener);
 }
