@@ -111,8 +111,6 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     books.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        JList list = (JList) e.getSource();
-
         if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
           editBook();
         }
@@ -122,8 +120,6 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     sections.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        JList list = (JList) e.getSource();
-
         if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
           editSection();
         }
