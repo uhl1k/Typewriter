@@ -19,13 +19,23 @@
 package cz.uhl1k.typewriter.gui;
 
 import cz.uhl1k.typewriter.Typewriter;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ResourceBundle;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -43,7 +53,6 @@ public class AboutWindow extends JDialog {
     super();
 
     buildGui();
-    // pack();
 
     setLocationRelativeTo(parent);
     setMinimumSize(new Dimension(300, 250));
@@ -55,15 +64,84 @@ public class AboutWindow extends JDialog {
 
   private void buildGui() {
     setLayout(new GridLayout(7, 1));
-    ((JPanel) getContentPane()).setBorder(new EmptyBorder(5, 5, 5, 5));
+    ((JPanel) getContentPane()).setBorder(new EmptyBorder(15, 15, 15, 15));
 
     add(new JLabel(new ImageIcon(getClass().getResource("/icon.png"))));
 
-    add(new JLabel(bundle.getString("typewriter"), SwingConstants.CENTER));
-    add(new JLabel(Typewriter.version, SwingConstants.CENTER));
-    add(new JLabel(bundle.getString("uhl1k"), SwingConstants.CENTER));
-    add(new JLabel(bundle.getString("repoUrl"), SwingConstants.CENTER));
-    add(new JLabel(bundle.getString("gnugpl"), SwingConstants.CENTER));
-    add(new JLabel(bundle.getString("licenseUrl"), SwingConstants.CENTER));
+    JLabel typewriter = new JLabel(bundle.getString("typewriter"), SwingConstants.CENTER);
+    typewriter.setBorder(BorderFactory.createEmptyBorder(15, 0, 10, 0));
+    typewriter.setFont(new Font(
+        typewriter.getFont().getName(),
+        typewriter.getFont().getStyle(),
+        typewriter.getFont().getSize() * 2));
+    add(typewriter);
+
+    JLabel version = new JLabel(Typewriter.version, SwingConstants.CENTER);
+    version.setBorder(BorderFactory.createEmptyBorder(1, 0, 5, 0));
+    version.setFont(new Font(
+        version.getFont().getName(),
+        Font.PLAIN,
+        version.getFont().getSize()));
+    add(version);
+
+    JLabel author = new JLabel(bundle.getString("uhl1k"), SwingConstants.CENTER);
+    author.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
+    add(author);
+
+    JLabel authorLink = new JLabel(
+        "<html><a href=\"\">" + bundle.getString("repoUrl") + "</a></html>",
+        SwingConstants.CENTER);
+    authorLink.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+    authorLink.setFont(new Font(
+        authorLink.getFont().getName(),
+        Font.PLAIN,
+        authorLink.getFont().getSize()));
+    authorLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    authorLink.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            try {
+              Desktop.getDesktop().browse(new URI(bundle.getString("repoUrl")));
+            } catch (URISyntaxException | IOException ex) {
+              JOptionPane.showMessageDialog(
+                  null,
+                  bundle.getString("linkError"),
+                  bundle.getString("error"),
+                  JOptionPane.ERROR_MESSAGE);
+            }
+          }
+        });
+    add(authorLink);
+
+    JLabel licenseName = new JLabel(bundle.getString("gnugpl"), SwingConstants.CENTER);
+    version.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+    add(licenseName);
+
+    JLabel licenseLink = new JLabel(
+        "<html><a href=\"\">" + bundle.getString("licenseUrl") + "</a></html>",
+        SwingConstants.CENTER);
+    licenseLink.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    licenseLink.setFont(new Font(
+        licenseLink.getFont().getName(),
+        Font.PLAIN,
+        licenseLink.getFont().getSize()));
+    licenseLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    licenseLink.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            try {
+              Desktop.getDesktop().browse(new URI(bundle.getString("licenseUrl")));
+            } catch (URISyntaxException | IOException ex) {
+              JOptionPane.showMessageDialog(
+                  null,
+                  bundle.getString("linkError"),
+                  bundle.getString("error"),
+                  JOptionPane.ERROR_MESSAGE);
+            }
+          }
+        });
+    add(licenseLink);
   }
 }
