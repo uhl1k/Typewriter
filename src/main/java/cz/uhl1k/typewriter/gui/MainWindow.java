@@ -41,6 +41,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -104,6 +105,10 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
     books.addListSelectionListener(e -> bookSelectionChanged());
     sections.addListSelectionListener(e -> sectionSelectionChanged());
+
+    books.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    sections.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
     content
         .getDocument()
         .addDocumentListener(
@@ -125,6 +130,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             });
 
     content.setEnabled(false);
+    content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
     Font font = new Font("Times New Roman", Font.PLAIN, 15);
     content.setFont(font);
