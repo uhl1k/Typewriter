@@ -32,6 +32,7 @@ import cz.uhl1k.typewriter.model.Section;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -50,6 +51,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
@@ -124,8 +126,11 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
     content.setEnabled(false);
 
-    var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT, books, sections);
-    var horizontal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, vertical, content);
+    Font font = new Font("Times New Roman", Font.PLAIN, 15);
+    content.setFont(font);
+
+    var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(books), new JScrollPane(sections));
+    var horizontal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, vertical, new JScrollPane(content));
 
     vertical.setDividerLocation(100);
     horizontal.setDividerLocation(200);
