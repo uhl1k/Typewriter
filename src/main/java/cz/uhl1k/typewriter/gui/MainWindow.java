@@ -32,14 +32,18 @@ import cz.uhl1k.typewriter.model.Section;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -50,6 +54,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
@@ -102,6 +107,28 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
     books.addListSelectionListener(e -> bookSelectionChanged());
     sections.addListSelectionListener(e -> sectionSelectionChanged());
+
+    books.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+          editBook();
+        }
+      }
+    });
+
+    sections.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+          editSection();
+        }
+      }
+    });
+
+    books.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    sections.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
     content
         .getDocument()
         .addDocumentListener(
@@ -123,9 +150,13 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             });
 
     content.setEnabled(false);
+    content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-    var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT, books, sections);
-    var horizontal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, vertical, content);
+    Font font = new Font("Times New Roman", Font.PLAIN, 15);
+    content.setFont(font);
+
+    var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(books), new JScrollPane(sections));
+    var horizontal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, vertical, new JScrollPane(content));
 
     vertical.setDividerLocation(100);
     horizontal.setDividerLocation(200);
