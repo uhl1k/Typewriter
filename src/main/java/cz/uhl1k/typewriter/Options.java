@@ -47,7 +47,8 @@ public class Options {
     if (!optionsFile.exists()) {
       try {
         optionsFile.createNewFile();
-      } catch (IOException e) {
+        putDefaults();
+      } catch (IOException | SettingsNotSavedException e) {
         e.printStackTrace();
       }
     }
@@ -114,5 +115,15 @@ public class Options {
     } catch (IOException e) {
       throw new SettingsNotSavedException();
     }
+  }
+
+  private void putDefaults() throws SettingsNotSavedException, IOException {
+    settings.put("maximized", "no");
+
+    settings.put("font-name", "Times New Roman");
+    settings.put("font-style", "0");
+    settings.put("font-size", "15");
+
+    save();
   }
 }

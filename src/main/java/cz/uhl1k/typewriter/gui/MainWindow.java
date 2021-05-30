@@ -45,7 +45,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -180,7 +179,10 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     content.setEnabled(false);
     content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-    Font font = new Font("Times New Roman", Font.PLAIN, 15);
+    Font font = new Font(
+        Options.getInstance().getValue("font-name"),
+        Integer.decode(Options.getInstance().getValue("font-style")),
+        Integer.decode(Options.getInstance().getValue("font-size")));
     content.setFont(font);
 
     var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(books), new JScrollPane(sections));
@@ -231,6 +233,15 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
     close.addActionListener(s -> close());
     file.add(close);
+
+    //  Options menu
+    var options = new JMenu(bundle.getString("options"));
+    options.setMnemonic('O');
+    menu.add(options);
+
+    var fontOption = new JMenuItem(bundle.getString("fontOptions"));
+    fontOption.addActionListener(e -> JOptionPane.showMessageDialog(null, "Not implemented."));
+    options.add(fontOption);
 
     //  Help menu
     var help = new JMenu(bundle.getString("help"));
