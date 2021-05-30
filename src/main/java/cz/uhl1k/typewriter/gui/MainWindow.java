@@ -18,7 +18,9 @@
 
 package cz.uhl1k.typewriter.gui;
 
+import cz.uhl1k.typewriter.Options;
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
+import cz.uhl1k.typewriter.exceptions.SettingsNotSavedException;
 import cz.uhl1k.typewriter.export.ExporterFactory;
 import cz.uhl1k.typewriter.export.TextExporter;
 import cz.uhl1k.typewriter.model.Book;
@@ -33,6 +35,7 @@ import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -42,6 +45,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -89,6 +93,30 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             close();
           }
         });
+
+    addWindowStateListener(e ->{
+      try {
+        if ((e.getOldState() & Frame.MAXIMIZED_BOTH) == 0 && (e.getNewState() & Frame.MAXIMIZED_BOTH) != 0) {
+          Options.getInstance().setValue("maximized", "yes");
+        } else {
+          Options.getInstance().setValue("maximized", "no");
+        }
+      } catch (SettingsNotSavedException settingsNotSavedException) {
+        settingsNotSavedException.printStackTrace();
+      }
+    });
+
+    String maximized = Options.getInstance().getValue("maximized");
+
+    if (maximized == null) {
+      try {
+        Options.getInstance().setValue("maximized", "no");
+      } catch (SettingsNotSavedException e) {
+        //  just ignore, not much more we can do;
+      }
+    } else if (maximized.equalsIgnoreCase("yes")) {
+      setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+    }
 
     setMinimumSize(new Dimension(600, 400));
     setTitle(bundle.getString("typewriter"));
