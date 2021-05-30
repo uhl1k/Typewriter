@@ -35,6 +35,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -105,6 +107,28 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
     books.addListSelectionListener(e -> bookSelectionChanged());
     sections.addListSelectionListener(e -> sectionSelectionChanged());
+
+    books.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        JList list = (JList) e.getSource();
+
+        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+          editBook();
+        }
+      }
+    });
+
+    sections.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        JList list = (JList) e.getSource();
+
+        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+          editSection();
+        }
+      }
+    });
 
     books.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     sections.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
