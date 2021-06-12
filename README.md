@@ -47,3 +47,5 @@ This program is licensed under GNU General Public License v3. More information o
 - Java 11 OpenJDK
 - IntelliJ Idea
 - Gimp
+
+For code formatting I use [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
