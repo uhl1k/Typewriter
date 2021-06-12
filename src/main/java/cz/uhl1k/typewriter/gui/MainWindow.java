@@ -25,7 +25,7 @@ import cz.uhl1k.typewriter.export.ExporterFactory;
 import cz.uhl1k.typewriter.export.TextExporter;
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.Chapter;
-import cz.uhl1k.typewriter.tpw.Data;
+import cz.uhl1k.typewriter.data.Data;
 import cz.uhl1k.typewriter.model.DataChangeEvent;
 import cz.uhl1k.typewriter.model.DataChangeListener;
 import cz.uhl1k.typewriter.model.FileChangeListener;

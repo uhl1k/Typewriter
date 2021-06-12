@@ -19,7 +19,7 @@
 package cz.uhl1k.typewriter.gui;
 
 import cz.uhl1k.typewriter.model.Book;
-import cz.uhl1k.typewriter.tpw.Data;
+import cz.uhl1k.typewriter.data.Data;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ResourceBundle;
