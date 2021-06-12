@@ -16,7 +16,7 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package cz.uhl1k.typewriter.tpw;
+package cz.uhl1k.typewriter.data;
 
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
 import cz.uhl1k.typewriter.model.Book;
@@ -44,11 +44,11 @@ import org.xml.sax.SAXException;
 public final class Data implements DataChangeListener, DataChangeSource, FileChangeSource {
 
   private static Data instance;
-  private File openedFile;
-  private boolean unsavedChanges;
   private final DefaultListModel<Book> books;
   private final List<DataChangeListener> dataChangeListeners;
   private final List<FileChangeListener> fileChangeListeners;
+  private File openedFile;
+  private boolean unsavedChanges;
 
   private Data() {
     unsavedChanges = false;

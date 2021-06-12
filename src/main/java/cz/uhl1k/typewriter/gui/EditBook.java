@@ -18,8 +18,8 @@
 
 package cz.uhl1k.typewriter.gui;
 
+import cz.uhl1k.typewriter.data.Data;
 import cz.uhl1k.typewriter.model.Book;
-import cz.uhl1k.typewriter.tpw.Data;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ResourceBundle;
@@ -38,10 +38,10 @@ import javax.swing.event.DocumentListener;
 /** Dialog for editing book. */
 public class EditBook extends JDialog {
 
-  ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
-  Book book;
   private final JTextField title;
   private final JTextField author;
+  ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
+  Book book;
 
   /**
    * Creates and opens a new dialog for editing book.

@@ -16,7 +16,7 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package cz.uhl1k.typewriter.tpw;
+package cz.uhl1k.typewriter.data;
 
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.Chapter;
@@ -153,7 +153,8 @@ public class TpwFileHandler {
             break;
           case XMLStreamConstants.CHARACTERS:
             if (poem || chapter) {
-              getLastSection().setContent(getLastSection().getContent() + event.asCharacters().getData());
+              getLastSection()
+                  .setContent(getLastSection().getContent() + event.asCharacters().getData());
             }
             break;
         }

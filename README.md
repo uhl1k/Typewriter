@@ -6,9 +6,8 @@ A simple program for writing novels, poems and books.
 
 My name is Roman Janků and currently I am a student at Faculty of Electrical Engineering at
 Czech Technical University in Prague. In my free time I write mostly poems, but some novels as 
-well and because of that I had a need to create this program. I wasn't happy with what other novel
-writing software has to offer, so I decided to create my own. I decided to publish since other
-people might find it useful for their novels.
+well. However, I wasn't happy with what other novel writing software has to offer, so I created 
+my own. Then I decided to publish since other people might find it useful for their writing.
 
 ## License
 
@@ -31,9 +30,22 @@ This program is licensed under GNU General Public License v3. More information o
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-## Technologies
+## How to run this program
 
-This program is written solely in Java with some occasional HTML because of documentation. I used Open JDK 11, but it 
-can be compiled in any newer version of Java from any other developer. However, I am not so sure about older versions of 
-Java since I use a lot of newer features, but after some modification it could run on older Java. For writing the source
-code I use IntelliJ Idea, but any other IDE or text editor will surely do the job.
+1. You need to install Java Runtime Environment version 11 or newer.
+
+2. You need to add `java/bin` path to your `PATH` variable.
+
+3. Download the JAR archive with application (available in releases on GitHub) or build your JAR
+   from sources (also available on GitHub).
+
+4. Use command `java -jar -[NAME_OF_THE_JAR_FILE]` to run the application packaged in JAR archive.
+   Replace `[NAME_OF_THE_JAR_FILE]` with the name of the JAR file with the application.
+
+## Technologies I used
+
+- Java 11 OpenJDK
+- IntelliJ Idea
+- Gimp
+
+For code formatting I use [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).

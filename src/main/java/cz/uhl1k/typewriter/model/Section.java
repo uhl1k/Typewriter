@@ -24,13 +24,11 @@ import java.util.List;
 
 /** Abstract base for Chapter and Poem. */
 public abstract class Section implements XmlSerializable, DataChangeSource {
+  private final List<DataChangeListener> listeners = new ArrayList<>();
   protected String title;
   protected String content;
-
   protected LocalDateTime created;
   protected LocalDateTime modified;
-
-  private final List<DataChangeListener> listeners = new ArrayList<>();
 
   /**
    * Returns the title.
