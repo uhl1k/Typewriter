@@ -18,7 +18,9 @@
 
 package cz.uhl1k.typewriter.gui;
 
+import cz.uhl1k.typewriter.Options;
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
+import cz.uhl1k.typewriter.exceptions.SettingsNotSavedException;
 import cz.uhl1k.typewriter.export.ExporterFactory;
 import cz.uhl1k.typewriter.export.TextExporter;
 import cz.uhl1k.typewriter.model.Book;
@@ -33,6 +35,7 @@ import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -89,6 +92,30 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             close();
           }
         });
+
+    addWindowStateListener(e ->{
+      try {
+        if ((e.getOldState() & Frame.MAXIMIZED_BOTH) == 0 && (e.getNewState() & Frame.MAXIMIZED_BOTH) != 0) {
+          Options.getInstance().setValue("maximized", "yes");
+        } else {
+          Options.getInstance().setValue("maximized", "no");
+        }
+      } catch (SettingsNotSavedException settingsNotSavedException) {
+        settingsNotSavedException.printStackTrace();
+      }
+    });
+
+    String maximized = Options.getInstance().getValue("maximized");
+
+    if (maximized == null) {
+      try {
+        Options.getInstance().setValue("maximized", "no");
+      } catch (SettingsNotSavedException e) {
+        //  just ignore, not much more we can do;
+      }
+    } else if (maximized.equalsIgnoreCase("yes")) {
+      setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+    }
 
     setMinimumSize(new Dimension(600, 400));
     setTitle(bundle.getString("typewriter"));
@@ -152,7 +179,10 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     content.setEnabled(false);
     content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-    Font font = new Font("Times New Roman", Font.PLAIN, 15);
+    Font font = new Font(
+        Options.getInstance().getValue("font-name"),
+        Integer.decode(Options.getInstance().getValue("font-style")),
+        Integer.decode(Options.getInstance().getValue("font-size")));
     content.setFont(font);
 
     var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(books), new JScrollPane(sections));
@@ -203,6 +233,15 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
     close.addActionListener(s -> close());
     file.add(close);
+
+    //  Options menu
+    var options = new JMenu(bundle.getString("options"));
+    options.setMnemonic('O');
+    menu.add(options);
+
+    var fontOption = new JMenuItem(bundle.getString("fontOptions"));
+    fontOption.addActionListener(e -> JOptionPane.showMessageDialog(null, "Not implemented."));
+    options.add(fontOption);
 
     //  Help menu
     var help = new JMenu(bundle.getString("help"));
