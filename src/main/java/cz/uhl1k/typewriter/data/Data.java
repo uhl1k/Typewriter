@@ -44,11 +44,11 @@ import org.xml.sax.SAXException;
 public final class Data implements DataChangeListener, DataChangeSource, FileChangeSource {
 
   private static Data instance;
-  private File openedFile;
-  private boolean unsavedChanges;
   private final DefaultListModel<Book> books;
   private final List<DataChangeListener> dataChangeListeners;
   private final List<FileChangeListener> fileChangeListeners;
+  private File openedFile;
+  private boolean unsavedChanges;
 
   private Data() {
     unsavedChanges = false;

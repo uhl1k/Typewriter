@@ -32,7 +32,9 @@ import java.util.Scanner;
 /** Class for handling options and settings of the application. This class is singleton. */
 public class Options {
 
-  private static final File optionsFile = new File(System.getProperty("user.home") + File.separator + ".tpw" + File.separator +"options");
+  private static final File optionsFile =
+      new File(
+          System.getProperty("user.home") + File.separator + ".tpw" + File.separator + "options");
 
   private static final Options INSTANCE = new Options();
   private final Map<String, String> settings;

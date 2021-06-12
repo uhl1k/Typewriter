@@ -19,13 +19,13 @@
 package cz.uhl1k.typewriter.gui;
 
 import cz.uhl1k.typewriter.Options;
+import cz.uhl1k.typewriter.data.Data;
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
 import cz.uhl1k.typewriter.exceptions.SettingsNotSavedException;
 import cz.uhl1k.typewriter.export.ExporterFactory;
 import cz.uhl1k.typewriter.export.TextExporter;
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.Chapter;
-import cz.uhl1k.typewriter.data.Data;
 import cz.uhl1k.typewriter.model.DataChangeEvent;
 import cz.uhl1k.typewriter.model.DataChangeListener;
 import cz.uhl1k.typewriter.model.FileChangeListener;
@@ -93,17 +93,19 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           }
         });
 
-    addWindowStateListener(e ->{
-      try {
-        if ((e.getOldState() & Frame.MAXIMIZED_BOTH) == 0 && (e.getNewState() & Frame.MAXIMIZED_BOTH) != 0) {
-          Options.getInstance().setValue("maximized", "yes");
-        } else {
-          Options.getInstance().setValue("maximized", "no");
-        }
-      } catch (SettingsNotSavedException settingsNotSavedException) {
-        settingsNotSavedException.printStackTrace();
-      }
-    });
+    addWindowStateListener(
+        e -> {
+          try {
+            if ((e.getOldState() & Frame.MAXIMIZED_BOTH) == 0
+                && (e.getNewState() & Frame.MAXIMIZED_BOTH) != 0) {
+              Options.getInstance().setValue("maximized", "yes");
+            } else {
+              Options.getInstance().setValue("maximized", "no");
+            }
+          } catch (SettingsNotSavedException settingsNotSavedException) {
+            settingsNotSavedException.printStackTrace();
+          }
+        });
 
     String maximized = Options.getInstance().getValue("maximized");
 
@@ -135,23 +137,25 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     books.addListSelectionListener(e -> bookSelectionChanged());
     sections.addListSelectionListener(e -> sectionSelectionChanged());
 
-    books.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-          editBook();
-        }
-      }
-    });
+    books.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+              editBook();
+            }
+          }
+        });
 
-    sections.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-          editSection();
-        }
-      }
-    });
+    sections.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+              editSection();
+            }
+          }
+        });
 
     books.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     sections.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -179,14 +183,18 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     content.setEnabled(false);
     content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-    Font font = new Font(
-        Options.getInstance().getValue("font-name"),
-        Integer.decode(Options.getInstance().getValue("font-style")),
-        Integer.decode(Options.getInstance().getValue("font-size")));
+    Font font =
+        new Font(
+            Options.getInstance().getValue("font-name"),
+            Integer.decode(Options.getInstance().getValue("font-style")),
+            Integer.decode(Options.getInstance().getValue("font-size")));
     content.setFont(font);
 
-    var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(books), new JScrollPane(sections));
-    var horizontal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, vertical, new JScrollPane(content));
+    var vertical =
+        new JSplitPane(
+            JSplitPane.VERTICAL_SPLIT, new JScrollPane(books), new JScrollPane(sections));
+    var horizontal =
+        new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, vertical, new JScrollPane(content));
 
     vertical.setDividerLocation(100);
     horizontal.setDividerLocation(200);

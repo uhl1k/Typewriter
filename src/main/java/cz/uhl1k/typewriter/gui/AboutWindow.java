@@ -47,6 +47,7 @@ public class AboutWindow extends JDialog {
 
   /**
    * Opens new about window.
+   *
    * @param parent Parent of this dialog.
    */
   public AboutWindow(JFrame parent) {
@@ -70,32 +71,29 @@ public class AboutWindow extends JDialog {
 
     JLabel typewriter = new JLabel(bundle.getString("typewriter"), SwingConstants.CENTER);
     typewriter.setBorder(BorderFactory.createEmptyBorder(15, 0, 10, 0));
-    typewriter.setFont(new Font(
-        typewriter.getFont().getName(),
-        typewriter.getFont().getStyle(),
-        typewriter.getFont().getSize() * 2));
+    typewriter.setFont(
+        new Font(
+            typewriter.getFont().getName(),
+            typewriter.getFont().getStyle(),
+            typewriter.getFont().getSize() * 2));
     add(typewriter);
 
     JLabel version = new JLabel(Typewriter.version, SwingConstants.CENTER);
     version.setBorder(BorderFactory.createEmptyBorder(1, 0, 5, 0));
-    version.setFont(new Font(
-        version.getFont().getName(),
-        Font.PLAIN,
-        version.getFont().getSize()));
+    version.setFont(new Font(version.getFont().getName(), Font.PLAIN, version.getFont().getSize()));
     add(version);
 
     JLabel author = new JLabel(bundle.getString("uhl1k"), SwingConstants.CENTER);
     author.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
     add(author);
 
-    JLabel authorLink = new JLabel(
-        "<html><a href=\"\">" + bundle.getString("repoUrl") + "</a></html>",
-        SwingConstants.CENTER);
+    JLabel authorLink =
+        new JLabel(
+            "<html><a href=\"\">" + bundle.getString("repoUrl") + "</a></html>",
+            SwingConstants.CENTER);
     authorLink.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-    authorLink.setFont(new Font(
-        authorLink.getFont().getName(),
-        Font.PLAIN,
-        authorLink.getFont().getSize()));
+    authorLink.setFont(
+        new Font(authorLink.getFont().getName(), Font.PLAIN, authorLink.getFont().getSize()));
     authorLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
     authorLink.addMouseListener(
         new MouseAdapter() {
@@ -118,14 +116,13 @@ public class AboutWindow extends JDialog {
     version.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
     add(licenseName);
 
-    JLabel licenseLink = new JLabel(
-        "<html><a href=\"\">" + bundle.getString("licenseUrl") + "</a></html>",
-        SwingConstants.CENTER);
+    JLabel licenseLink =
+        new JLabel(
+            "<html><a href=\"\">" + bundle.getString("licenseUrl") + "</a></html>",
+            SwingConstants.CENTER);
     licenseLink.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    licenseLink.setFont(new Font(
-        licenseLink.getFont().getName(),
-        Font.PLAIN,
-        licenseLink.getFont().getSize()));
+    licenseLink.setFont(
+        new Font(licenseLink.getFont().getName(), Font.PLAIN, licenseLink.getFont().getSize()));
     licenseLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
     licenseLink.addMouseListener(
         new MouseAdapter() {

@@ -37,9 +37,9 @@ import javax.swing.event.DocumentListener;
 /** Dialog for editing Section. */
 public class EditSection extends JDialog {
 
+  private final JTextField title;
   ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
   Section section;
-  private final JTextField title;
 
   /**
    * Creates and opens a new dialog for editing section.
