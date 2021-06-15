@@ -242,15 +242,6 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     close.addActionListener(s -> close());
     file.add(close);
 
-    //  Options menu
-    var options = new JMenu(bundle.getString("options"));
-    options.setMnemonic('O');
-    menu.add(options);
-
-    var fontOption = new JMenuItem(bundle.getString("fontOptions"));
-    fontOption.addActionListener(e -> JOptionPane.showMessageDialog(null, "Not implemented."));
-    options.add(fontOption);
-
     //  Help menu
     var help = new JMenu(bundle.getString("help"));
     help.setMnemonic('H');
