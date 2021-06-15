@@ -19,9 +19,15 @@
 package cz.uhl1k.typewriter;
 
 import cz.uhl1k.typewriter.gui.MainWindow;
+import java.io.File;
+import java.io.IOException;
+import java.util.ResourceBundle;
+import javax.swing.JOptionPane;
 
 /** Main class of the typewriter application. */
 public class Typewriter {
+
+  private static ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
   /** Version of the application */
   public static final String version = "0.8 ALPHA";
@@ -32,6 +38,9 @@ public class Typewriter {
    * @param args Arguments from command line.
    */
   public static void main(String... args) {
+
+    File fileToOpen = null;
+
     if (args.length > 0) {
       for (String arg : args) {
         switch (arg.toLowerCase()) {
@@ -44,12 +53,20 @@ public class Typewriter {
             return;
 
           default:
-            // TODO  here will be handling file to open
+            try {
+              fileToOpen = new File(arg);
+              if (!fileToOpen.exists()) {
+                fileToOpen = null;
+                throw new IOException("No such file exists!");
+              }
+            } catch (IOException ex) {
+              JOptionPane.showMessageDialog(null, bundle.getString("fileError"), bundle.getString("error"), JOptionPane.ERROR_MESSAGE);
+            }
         }
       }
     }
     printLicenseShort();
-    new MainWindow();
+    new MainWindow(fileToOpen);
   }
 
   private static void printLicenseShort() {

@@ -43,6 +43,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
@@ -65,6 +66,8 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 /** The main window of this application. */
 public class MainWindow extends JFrame implements DataChangeListener, FileChangeListener {
@@ -76,7 +79,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
   JTextArea content;
 
   /** Creates and shows a main window. */
-  public MainWindow() {
+  public MainWindow(File file) {
     buildGui();
 
     Data.getInstance().registerListener((DataChangeListener) this);
@@ -121,6 +124,15 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
 
     setMinimumSize(new Dimension(600, 400));
     setTitle(bundle.getString("typewriter"));
+
+    if (file != null) {
+      try {
+        Data.getInstance().open(file);
+      } catch (IOException | SAXException | ParserConfigurationException ex) {
+        JOptionPane.showMessageDialog(null, bundle.getString("fileError"), bundle.getString("error"), JOptionPane.ERROR_MESSAGE);
+      }
+    }
+
     setVisible(true);
   }
 
