@@ -72,9 +72,9 @@ public class Typewriter {
   private static void printLicenseShort() {
     System.out.println("Typewriter  Copyright (C) 2021  uhl1k (Roman Janků)");
     System.out.println(
-        "This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.");
+        "This program comes with ABSOLUTELY NO WARRANTY; for details use option -l.");
     System.out.println("This is free software, and you are welcome to redistribute it");
-    System.out.println("under certain conditions; type `show c' for details.");
+    System.out.println("under certain conditions.");
   }
 
   private static void printLicenseLong() {
