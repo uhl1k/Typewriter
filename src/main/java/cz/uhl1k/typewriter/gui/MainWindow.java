@@ -133,6 +133,12 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
       }
     }
 
+    Data.getInstance().resetUnsaved();
+
+    if (getTitle().endsWith("*")) {
+      setTitle(getTitle().substring(0, getTitle().length()-1));
+    }
+
     setVisible(true);
   }
 
