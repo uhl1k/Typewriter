@@ -249,6 +249,13 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     return openedFile != null;
   }
 
+  /**
+   * Sets unsaved changes to false.
+   */
+  public void resetUnsaved() {
+    unsavedChanges = false;
+  }
+
   @Override
   public void dataChanged(DataChangeEvent event) {
     fireDataChange(event);
