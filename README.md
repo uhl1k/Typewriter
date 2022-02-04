@@ -42,6 +42,34 @@ This program is licensed under GNU General Public License v3. More information o
 4. Use command `java -jar -[NAME_OF_THE_JAR_FILE]` to run the application packaged in JAR archive.
    Replace `[NAME_OF_THE_JAR_FILE]` with the name of the JAR file with the application.
 
+## Logging and options
+
+The application outputs its logs to file named ``logs`` placed in the ``.tpw`` directory placed in 
+the home directory of the user running the application. Logs are done in standard Java logging format
+
+    úno 04, 2022 4:00:53 ODP. cz.uhl1k.typewriter.Logging initiate 
+    INFO: Initiated logger.
+
+The left part of the first line contains date and time of the logging event. The right half contains
+information from where the logging was done. The second line is logging message. There can be a 
+stack trace appended if the logging was done because of an exception.
+
+File named ``options`` is stored at the same location as ``logs`` file and it contains options
+for the program. It looks like this:
+
+    maximized:	no
+    font-size:	15
+    font-name:	Times New Roman
+    font-style:	0
+
+* ``maximized`` says weather the main window should be maximized. Two values are allowed ``yes`` 
+  and ``no``.
+* ``font-size`` defines the size of the font used in the poem and chapter editing area. It is in 
+  pixels and positive integer is allowed.
+* ``font-name`` name of the font used in the poem and chapter editing area. Font with this name 
+  must be present in the system.
+* ``font-style`` defines the style of the font. Should be ``0``.
+ 
 ## Technologies I used
 
 - Java 11 OpenJDK
