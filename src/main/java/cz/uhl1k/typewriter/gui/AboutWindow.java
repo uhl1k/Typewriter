@@ -53,8 +53,10 @@ public class AboutWindow extends JDialog {
   public AboutWindow(JFrame parent) {
     super();
 
+    //  call method that builds the entire GUI
     buildGui();
 
+    //  set some basic window parameters
     setLocationRelativeTo(parent);
     setMinimumSize(new Dimension(300, 250));
     setModal(true);
@@ -64,11 +66,14 @@ public class AboutWindow extends JDialog {
   }
 
   private void buildGui() {
+    //  grid layout with seven rows
     setLayout(new GridLayout(7, 1));
     ((JPanel) getContentPane()).setBorder(new EmptyBorder(15, 15, 15, 15));
 
+    //  icon of the program
     add(new JLabel(new ImageIcon(getClass().getResource("/icon.png"))));
 
+    //  name of the program
     JLabel typewriter = new JLabel(bundle.getString("typewriter"), SwingConstants.CENTER);
     typewriter.setBorder(BorderFactory.createEmptyBorder(15, 0, 10, 0));
     typewriter.setFont(
@@ -78,15 +83,18 @@ public class AboutWindow extends JDialog {
             typewriter.getFont().getSize() * 2));
     add(typewriter);
 
+    //  version of the program
     JLabel version = new JLabel(Typewriter.version, SwingConstants.CENTER);
     version.setBorder(BorderFactory.createEmptyBorder(1, 0, 5, 0));
     version.setFont(new Font(version.getFont().getName(), Font.PLAIN, version.getFont().getSize()));
     add(version);
 
+    //  author of the program
     JLabel author = new JLabel(bundle.getString("uhl1k"), SwingConstants.CENTER);
     author.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
     add(author);
 
+    //  link to the author of the program
     JLabel authorLink =
         new JLabel(
             "<html><a href=\"\">" + bundle.getString("repoUrl") + "</a></html>",
@@ -112,10 +120,12 @@ public class AboutWindow extends JDialog {
         });
     add(authorLink);
 
+    //  information about license
     JLabel licenseName = new JLabel(bundle.getString("gnugpl"), SwingConstants.CENTER);
     version.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
     add(licenseName);
 
+    //  link to the text of the license
     JLabel licenseLink =
         new JLabel(
             "<html><a href=\"\">" + bundle.getString("licenseUrl") + "</a></html>",
