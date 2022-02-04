@@ -22,6 +22,7 @@ import cz.uhl1k.typewriter.gui.MainWindow;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javax.swing.JOptionPane;
 
 /** Main class of the typewriter application. */
@@ -39,6 +40,8 @@ public class Typewriter {
    */
   public static void main(String... args) {
 
+    Logging.log("Typewriter is starting.", Level.INFO);
+
     File fileToOpen = null;
 
     if (args.length > 0) {
@@ -46,10 +49,12 @@ public class Typewriter {
         switch (arg.toLowerCase()) {
           case "-h":
             printHelp();
+            Logging.log("Printed short help.", Level.INFO);
             return;
 
           case "-l":
             printLicenseLong();
+            Logging.log("Printed licensing information.", Level.INFO);
             return;
 
           default:
@@ -61,6 +66,7 @@ public class Typewriter {
               }
             } catch (IOException ex) {
               JOptionPane.showMessageDialog(null, bundle.getString("fileError"), bundle.getString("error"), JOptionPane.ERROR_MESSAGE);
+              Logging.log("Could not open file on startup! CAUSE: " + ex.getMessage(), Level.INFO, ex.getCause().getStackTrace());
             }
         }
       }

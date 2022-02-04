@@ -54,12 +54,7 @@ public class Logging {
     }
   }
 
-  /**
-   * Logs a given message with given level into a log file.
-   * @param message Message to log.
-   * @param loggingLevel Level of the message.
-   */
-  public static void log(String message, Level loggingLevel) {
+  private static void checkInit() {
     if (LOGGER == null) {
       synchronized (LOGGER) {
         if (LOGGER == null) {
@@ -72,7 +67,30 @@ public class Logging {
         }
       }
     }
+  }
 
+  /**
+   * Logs a given message with given level into a log file.
+   * @param message Message to log.
+   * @param loggingLevel Level of the message.
+   */
+  public static void log(String message, Level loggingLevel) {
+    checkInit();
     LOGGER.log(loggingLevel, message);
+  }
+
+  /**
+   * Logs a given message with given level into a log file.
+   * @param message Message to log.
+   * @param loggingLevel Level of the message.
+   * @param stackTrace Stack trace array of the exception.
+   */
+  public static void log(String message, Level loggingLevel, StackTraceElement[] stackTrace) {
+    checkInit();
+    var sb = new StringBuilder();
+    for (StackTraceElement element : stackTrace) {
+        sb.append("\n" + element.toString());
+    }
+    LOGGER.log(loggingLevel, message + sb.toString());
   }
 }

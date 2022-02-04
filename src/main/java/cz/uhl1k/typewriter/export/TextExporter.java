@@ -18,6 +18,7 @@
 
 package cz.uhl1k.typewriter.export;
 
+import cz.uhl1k.typewriter.Logging;
 import cz.uhl1k.typewriter.exceptions.LineTooShortException;
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.Chapter;
@@ -26,6 +27,7 @@ import cz.uhl1k.typewriter.model.Section;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
 
 /** Exporter for exporting to a text file. Default length of line is 75 characters; */
 public class TextExporter extends Exporter {
@@ -96,7 +98,7 @@ public class TextExporter extends Exporter {
       }
 
     } catch (IOException ex) {
-
+      Logging.log("Error while exporting .txt file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
     }
   }
 }

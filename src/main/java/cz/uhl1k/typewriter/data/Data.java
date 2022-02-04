@@ -18,6 +18,7 @@
 
 package cz.uhl1k.typewriter.data;
 
+import cz.uhl1k.typewriter.Logging;
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.DataChangeEvent;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
 import javax.xml.parsers.ParserConfigurationException;
@@ -111,7 +113,8 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
       writer.close();
       unsavedChanges = false;
     } catch (XMLStreamException ex) {
-
+      Logging.log("Error while saving .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
+      throw new IOException("Error when exporting to xml!", ex);
     }
   }
 

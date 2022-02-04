@@ -27,10 +27,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.logging.Level;
+import javax.swing.JOptionPane;
 
 /** Class for handling options and settings of the application. This class is singleton. */
 public class Options {
+
+  private static ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
   private static final File optionsFile =
       new File(
@@ -53,7 +58,8 @@ public class Options {
         optionsFile.createNewFile();
         putDefaults();
       } catch (IOException | SettingsNotSavedException e) {
-        e.printStackTrace();
+        Logging.log("Could not create options file! Cause: " + e.getMessage(), Level.SEVERE, e.getStackTrace());
+        JOptionPane.showMessageDialog(null, bundle.getString("optionsError"), bundle.getString("error"), JOptionPane.ERROR_MESSAGE);
       }
     }
 
@@ -67,10 +73,9 @@ public class Options {
           settings.put(parts[0], parts[1]);
         }
       }
-    } catch (FileNotFoundException e) {
-
     } catch (IOException e) {
-
+      Logging.log("Could not create options file! Cause: " + e.getMessage(), Level.SEVERE, e.getStackTrace());
+      JOptionPane.showMessageDialog(null, bundle.getString("optionsError"), bundle.getString("error"), JOptionPane.ERROR_MESSAGE);
     }
   }
 

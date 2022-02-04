@@ -18,12 +18,14 @@
 
 package cz.uhl1k.typewriter.gui;
 
+import cz.uhl1k.typewriter.Logging;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
@@ -72,6 +74,7 @@ public class LicenseWindow extends JDialog {
           bundle.getString("licenseNotFound"),
           bundle.getString("error"),
           JOptionPane.ERROR_MESSAGE);
+      Logging.log("Could not load license text! Cause: " + ex.getMessage(), Level.WARNING, ex.getStackTrace());
       return "";
     }
   }
