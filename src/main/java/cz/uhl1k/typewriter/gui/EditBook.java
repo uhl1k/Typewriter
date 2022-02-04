@@ -54,6 +54,7 @@ public class EditBook extends JDialog {
     setLayout(new GridLayout(5, 1));
     ((JPanel) getContentPane()).setBorder(new EmptyBorder(5, 5, 5, 5));
 
+    //  title of the book
     add(new JLabel(bundle.getString("title"), SwingConstants.CENTER));
     title = new JTextField(book.getTitle());
     title.setBorder(
@@ -80,6 +81,7 @@ public class EditBook extends JDialog {
             });
     add(title);
 
+    //  author's name
     add(new JLabel(bundle.getString("author"), SwingConstants.CENTER));
     author = new JTextField(book.getAuthor());
     author.setBorder(
@@ -106,6 +108,7 @@ public class EditBook extends JDialog {
             });
     add(author);
 
+    //  ok button
     JButton ok = new JButton(bundle.getString("ok"));
     ok.addActionListener(e -> clickedOk());
     ok.setBorder(
@@ -113,6 +116,7 @@ public class EditBook extends JDialog {
             BorderFactory.createEmptyBorder(10, 0, 0, 0), ok.getBorder()));
     add(ok);
 
+    //  set basic parameters of the window
     setLocationRelativeTo(parent);
     setResizable(false);
     setMinimumSize(new Dimension(250, 50));

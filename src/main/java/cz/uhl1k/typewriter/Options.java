@@ -42,10 +42,12 @@ public class Options {
   private Options() {
     settings = new HashMap<>();
 
+    //  create directory for options file in home directory if it does not exist
     if (!Files.exists(Path.of(System.getProperty("user.home") + File.separator + ".tpw"))) {
       new File(System.getProperty("user.home") + File.separator + ".tpw").mkdir();
     }
 
+    //  create options file if it does not exist
     if (!optionsFile.exists()) {
       try {
         optionsFile.createNewFile();
@@ -55,6 +57,7 @@ public class Options {
       }
     }
 
+    //  read the options file line by line and parse it
     try (Scanner scanner = new Scanner(optionsFile)) {
       while (scanner.hasNext()) {
         String line = scanner.nextLine();

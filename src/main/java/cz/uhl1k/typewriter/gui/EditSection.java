@@ -52,6 +52,7 @@ public class EditSection extends JDialog {
     setLayout(new GridLayout(3, 1));
     ((JPanel) getContentPane()).setBorder(new EmptyBorder(5, 5, 5, 5));
 
+    //  title of the section
     add(new JLabel(bundle.getString("title"), SwingConstants.CENTER));
     title = new JTextField(section.getTitle());
     title.setBorder(
@@ -78,6 +79,7 @@ public class EditSection extends JDialog {
             });
     add(title);
 
+    //  ok button
     JButton ok = new JButton(bundle.getString("ok"));
     ok.addActionListener(e -> clickedOk());
     ok.setBorder(
@@ -85,6 +87,7 @@ public class EditSection extends JDialog {
             BorderFactory.createEmptyBorder(10, 0, 0, 0), ok.getBorder()));
     add(ok);
 
+    //  setting basic parameters of the window
     setLocationRelativeTo(parent);
     setResizable(false);
     setMinimumSize(new Dimension(250, 10));
