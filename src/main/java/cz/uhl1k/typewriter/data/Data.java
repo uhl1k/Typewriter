@@ -88,6 +88,8 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
       throw new NoFileSpecifiedException("No file specified!");
     }
 
+    Logging.log("Saving file: " + openedFile.getAbsolutePath(), Level.INFO);
+
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
     try {
       XMLStreamWriter writer =
@@ -126,6 +128,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
    */
   public void saveAs(File file) throws IOException {
     openedFile = file;
+    Logging.log("Saving file as: " + openedFile.getAbsolutePath(), Level.INFO);
     fireFileChange();
     try {
       save();
@@ -145,6 +148,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
   public void open(File file) throws SAXException, IOException, ParserConfigurationException {
     clear();
     openedFile = file;
+    Logging.log("Opening file: " + openedFile.getAbsolutePath(), Level.INFO);
     fireFileChange();
 
     TpwFileHandler handler = TpwFileHandler.getHandler();
@@ -159,6 +163,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     unsavedChanges = false;
     openedFile = null;
     fireFileChange();
+    Logging.log("Cleared data.", Level.INFO);
   }
 
   /**

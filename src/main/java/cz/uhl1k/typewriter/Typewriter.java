@@ -60,8 +60,10 @@ public class Typewriter {
           default:
             try {
               fileToOpen = new File(arg);
+              Logging.log("Opening file on start-up: " + fileToOpen.getAbsolutePath(), Level.INFO);
               if (!fileToOpen.exists()) {
                 fileToOpen = null;
+                Logging.log("Could not open file on startup! File does not exist.", Level.INFO);
                 throw new IOException("No such file exists!");
               }
             } catch (IOException ex) {
