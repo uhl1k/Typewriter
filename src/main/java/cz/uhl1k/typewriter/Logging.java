@@ -35,6 +35,8 @@ public class Logging {
 
   private static Logger LOGGER = null;
 
+  private static Object lock = new Object();
+
   private static void initiate() throws CannotLogException {
     LOGGER = Logger.getLogger("typewriter");
     LOGGER.setUseParentHandlers(false);
@@ -56,7 +58,7 @@ public class Logging {
 
   private static void checkInit() {
     if (LOGGER == null) {
-      synchronized (LOGGER) {
+      synchronized (lock) {
         if (LOGGER == null) {
           try {
             initiate();
