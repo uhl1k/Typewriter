@@ -18,6 +18,7 @@
 
 package cz.uhl1k.typewriter.gui;
 
+import cz.uhl1k.typewriter.Logging;
 import cz.uhl1k.typewriter.Options;
 import cz.uhl1k.typewriter.data.Data;
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
@@ -47,6 +48,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -105,8 +107,8 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             } else {
               Options.getInstance().setValue("maximized", "no");
             }
-          } catch (SettingsNotSavedException settingsNotSavedException) {
-            settingsNotSavedException.printStackTrace();
+          } catch (SettingsNotSavedException ex) {
+            Logging.log("Could not update options! Cause: " + ex.getMessage(), Level.WARNING, ex.getStackTrace());
           }
         });
 
@@ -115,8 +117,8 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     if (maximized == null) {
       try {
         Options.getInstance().setValue("maximized", "no");
-      } catch (SettingsNotSavedException e) {
-        //  just ignore, not much more we can do;
+      } catch (SettingsNotSavedException ex) {
+        Logging.log("Could not update options! Cause: " + ex.getMessage(), Level.WARNING, ex.getStackTrace());
       }
     } else if (maximized.equalsIgnoreCase("yes")) {
       setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
@@ -130,6 +132,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
         Data.getInstance().open(file);
       } catch (IOException | SAXException | ParserConfigurationException ex) {
         JOptionPane.showMessageDialog(null, bundle.getString("fileError"), bundle.getString("error"), JOptionPane.ERROR_MESSAGE);
+        Logging.log("Could not read .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
       }
     }
 
@@ -630,6 +633,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
           bundle.getString("error"),
           JOptionPane.ERROR_MESSAGE);
+      Logging.log("Error while saving .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
     }
   }
 
@@ -654,6 +658,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
             bundle.getString("error"),
             JOptionPane.ERROR_MESSAGE);
+        Logging.log("Error while saving .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
       }
     }
   }
@@ -725,6 +730,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             bundle.getString("wrongOpeningFile") + "\n" + ex.getMessage(),
             bundle.getString("error"),
             JOptionPane.ERROR_MESSAGE);
+        Logging.log("Error while opening .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
       }
     }
   }
@@ -755,6 +761,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
             bundle.getString("error"),
             JOptionPane.ERROR_MESSAGE);
+        Logging.log("Error while exporting .txt file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
       }
     }
   }
@@ -771,7 +778,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             StandardCopyOption.REPLACE_EXISTING);
         desktop.browse(tmp.toURI());
       } catch (Exception e) {
-        e.printStackTrace();
+        Logging.log("Could not open help file! Cause: " + e.getMessage(), Level.WARNING, e.getStackTrace());
       }
     }
   }

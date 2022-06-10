@@ -18,6 +18,7 @@
 
 package cz.uhl1k.typewriter.data;
 
+import cz.uhl1k.typewriter.Logging;
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.DataChangeEvent;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
 import javax.xml.parsers.ParserConfigurationException;
@@ -86,6 +88,8 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
       throw new NoFileSpecifiedException("No file specified!");
     }
 
+    Logging.log("Saving file: " + openedFile.getAbsolutePath(), Level.INFO);
+
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
     try {
       XMLStreamWriter writer =
@@ -111,7 +115,8 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
       writer.close();
       unsavedChanges = false;
     } catch (XMLStreamException ex) {
-
+      Logging.log("Error while saving .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
+      throw new IOException("Error when exporting to xml!", ex);
     }
   }
 
@@ -123,6 +128,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
    */
   public void saveAs(File file) throws IOException {
     openedFile = file;
+    Logging.log("Saving file as: " + openedFile.getAbsolutePath(), Level.INFO);
     fireFileChange();
     try {
       save();
@@ -142,6 +148,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
   public void open(File file) throws SAXException, IOException, ParserConfigurationException {
     clear();
     openedFile = file;
+    Logging.log("Opening file: " + openedFile.getAbsolutePath(), Level.INFO);
     fireFileChange();
 
     TpwFileHandler handler = TpwFileHandler.getHandler();
@@ -156,6 +163,7 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     unsavedChanges = false;
     openedFile = null;
     fireFileChange();
+    Logging.log("Cleared data.", Level.INFO);
   }
 
   /**

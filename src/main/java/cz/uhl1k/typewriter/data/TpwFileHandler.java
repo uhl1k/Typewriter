@@ -18,6 +18,7 @@
 
 package cz.uhl1k.typewriter.data;
 
+import cz.uhl1k.typewriter.Logging;
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.Chapter;
 import cz.uhl1k.typewriter.model.Poem;
@@ -28,6 +29,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -48,6 +52,8 @@ public class TpwFileHandler {
   private Book lastBook = null;
 
   private TpwFileHandler() {}
+
+  private static ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
   public static TpwFileHandler getHandler() {
     return handler;
@@ -161,11 +167,17 @@ public class TpwFileHandler {
       }
 
     } catch (FileNotFoundException ex) {
-
+      Logging.log("Error while opening .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
+      JOptionPane.showMessageDialog(null, bundle.getString("wrongOpeningFile"), bundle.getString("error"), JOptionPane.ERROR_MESSAGE);
+      Data.getInstance().clear();
     } catch (IOException ex) {
-
+      Logging.log("Error while opening .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
+      JOptionPane.showMessageDialog(null, bundle.getString("wrongOpeningFile"), bundle.getString("error"), JOptionPane.ERROR_MESSAGE);
+      Data.getInstance().clear();
     } catch (XMLStreamException ex) {
-
+      Logging.log("Error while opening .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
+      JOptionPane.showMessageDialog(null, bundle.getString("wrongOpeningFile"), bundle.getString("error"), JOptionPane.ERROR_MESSAGE);
+      Data.getInstance().clear();
     }
   }
 
