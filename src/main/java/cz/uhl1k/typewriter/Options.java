@@ -35,13 +35,11 @@ import javax.swing.JOptionPane;
 /** Class for handling options and settings of the application. This class is singleton. */
 public class Options {
 
-  private static ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
-
   private static final File optionsFile =
       new File(
           System.getProperty("user.home") + File.separator + ".tpw" + File.separator + "options");
-
   private static final Options INSTANCE = new Options();
+  private static final ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
   private final Map<String, String> settings;
 
   private Options() {

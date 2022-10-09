@@ -19,7 +19,9 @@
 package cz.uhl1k.typewriter.data;
 
 import cz.uhl1k.typewriter.Logging;
+import cz.uhl1k.typewriter.Options;
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
+import cz.uhl1k.typewriter.exceptions.SettingsNotSavedException;
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.DataChangeEvent;
 import cz.uhl1k.typewriter.model.DataChangeListener;
@@ -149,6 +151,11 @@ public final class Data implements DataChangeListener, DataChangeSource, FileCha
     clear();
     openedFile = file;
     Logging.log("Opening file: " + openedFile.getAbsolutePath(), Level.INFO);
+    try {
+      Options.getInstance().setValue("last-file", openedFile.getAbsolutePath());
+    } catch (SettingsNotSavedException ex) {
+      Logging.log("Could not set last file to " + file.getAbsolutePath() + ".", Level.WARNING);
+    }
     fireFileChange();
 
     TpwFileHandler handler = TpwFileHandler.getHandler();
