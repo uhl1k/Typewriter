@@ -41,6 +41,7 @@ This program is licensed under GNU General Public License v3. More information o
 
 4. Use command `java -jar -[NAME_OF_THE_JAR_FILE]` to run the application packaged in JAR archive.
    Replace `[NAME_OF_THE_JAR_FILE]` with the name of the JAR file with the application.
+5. Instead of opening file using ``File > Open`` option from menu, you can pass the name of the file as a parameter when starting the program.
 
 ## Logging and options
 
@@ -61,6 +62,7 @@ for the program. It looks like this:
     font-size:	15
     font-name:	Times New Roman
     font-style:	0
+    last-file:      /home/uhl1k/test.tpw
 
 * ``maximized`` says weather the main window should be maximized. Two values are allowed ``yes`` 
   and ``no``.
@@ -69,6 +71,7 @@ for the program. It looks like this:
 * ``font-name`` name of the font used in the poem and chapter editing area. Font with this name 
   must be present in the system.
 * ``font-style`` defines the style of the font. Should be ``0``.
+* ``last-file`` is a full name of last file that was opened by the program. Can be missing if no file was opened.
  
 ## Technologies I used
 
