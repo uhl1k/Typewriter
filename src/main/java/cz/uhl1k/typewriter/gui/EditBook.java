@@ -119,7 +119,7 @@ public class EditBook extends JDialog {
     //  set basic parameters of the window
     setLocationRelativeTo(parent);
     setResizable(false);
-    setMinimumSize(new Dimension(250, 50));
+    setMinimumSize(new Dimension(350, 25));
     pack();
     setModal(true);
     setTitle(bundle.getString("bookEditing") + " " + book.getTitle());
