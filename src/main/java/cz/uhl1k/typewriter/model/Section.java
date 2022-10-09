@@ -126,6 +126,6 @@ public abstract class Section implements XmlSerializable, DataChangeSource {
 
   @Override
   public String toString() {
-    return title;
+    return title.length()==0 ? " " : title;
   }
 }
