@@ -28,10 +28,9 @@ import javax.swing.JOptionPane;
 /** Main class of the typewriter application. */
 public class Typewriter {
 
-  private static ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
-
   /** Version of the application */
   public static final String version = "0.8 ALPHA";
+  private static final ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
   /**
    * Main method of this application.

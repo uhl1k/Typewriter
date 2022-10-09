@@ -44,6 +44,7 @@ import javax.xml.stream.events.XMLEvent;
 /** Handler for parsing .tpw files. */
 public class TpwFileHandler {
   private static final TpwFileHandler handler = new TpwFileHandler();
+  private static final ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
   private boolean meta = false;
   private boolean data = false;
   private boolean book = false;
@@ -52,8 +53,6 @@ public class TpwFileHandler {
   private Book lastBook = null;
 
   private TpwFileHandler() {}
-
-  private static ResourceBundle bundle = ResourceBundle.getBundle("translations/bundle");
 
   public static TpwFileHandler getHandler() {
     return handler;

@@ -35,7 +35,7 @@ public class Logging {
 
   private static Logger LOGGER = null;
 
-  private static Object lock = new Object();
+  private static final Object lock = new Object();
 
   private static void initiate() throws CannotLogException {
     LOGGER = Logger.getLogger("typewriter");
@@ -64,7 +64,6 @@ public class Logging {
             initiate();
           } catch (CannotLogException ex) {
             System.out.println("Could not initiate log! Cause: " + ex.getCause().getMessage());
-            return;
           }
         }
       }
@@ -93,6 +92,6 @@ public class Logging {
     for (StackTraceElement element : stackTrace) {
         sb.append("\n" + element.toString());
     }
-    LOGGER.log(loggingLevel, message + sb.toString());
+    LOGGER.log(loggingLevel, message + sb);
   }
 }
