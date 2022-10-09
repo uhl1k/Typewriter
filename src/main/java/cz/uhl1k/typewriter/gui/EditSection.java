@@ -90,7 +90,7 @@ public class EditSection extends JDialog {
     //  setting basic parameters of the window
     setLocationRelativeTo(parent);
     setResizable(false);
-    setMinimumSize(new Dimension(250, 10));
+    setMinimumSize(new Dimension(350, 10));
     pack();
     setModal(true);
     setTitle(bundle.getString("sectionEditing") + " " + section.getTitle());
