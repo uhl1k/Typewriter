@@ -241,6 +241,13 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     open.addActionListener(e -> open());
     file.add(open);
 
+    var openLast = new JMenuItem(bundle.getString("openLast"));
+    openLast.addActionListener(e -> openLast());
+    if (Options.getInstance().getValue("last-file") == null) {
+      openLast.setEnabled(false);
+    }
+    file.add(openLast);
+
     var save = new JMenuItem(bundle.getString("save"));
     save.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK));
     save.addActionListener(e -> save());
@@ -732,6 +739,22 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             JOptionPane.ERROR_MESSAGE);
         Logging.log("Error while opening .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
       }
+    }
+  }
+
+  private void openLast() {
+    try {
+      Data.getInstance().open(new File(Options.getInstance().getValue("last-file")));
+      if (getTitle().endsWith("*")) {
+        setTitle(getTitle().substring(0, getTitle().length() - 2));
+      }
+    } catch (Exception ex) {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("wrongOpeningFile") + "\n" + ex.getMessage(),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE);
+      Logging.log("Error while opening .tpw file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
     }
   }
 
