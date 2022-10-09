@@ -3,10 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <title>Help for typewriter.</title>
+
+    <style>
+        body {
+            font-family: "Lucida Console", "Courier New", monospace;
+        }
+
+        h1 {
+            color: firebrick;
+        }
+
+        h2 {
+            border-bottom: 1px solid firebrick;
+        }
+
+        a:link, a:visited {
+            color: firebrick;
+            text-decoration: none;
+        }
+
+        a:hover, a:focus, a:active {
+            color: firebrick;
+            text-decoration: underline;
+        }
+
+        p {
+            font-size: 1rem;
+            text-align: justify;
+            text-align-last: left;
+        }
+    </style>
+
 </head>
 <body>
 <h1>Help for typewriter</h1>
 
-<p>Here will later be a help for the typewriter.</p>
+<img src="../icon.png"/>
+
+<p>
+    <em>What is typewriter?</em>
+</p>
+<p>
+    Typewriter is a simple program written in Java programming language. I wrote it because I wasn't happy with other novel and poem writing software. Then I decided to publish since other people might find it useful for their writing.
+</p>
+
+<p>
+    Typewriter is a free software. This means you can modify it and/or distributed as you want. However, you have to keep the license, which <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU GeneralPublic License 3.0</a>, you have to state your changes, keep the program open-source and keep link to the original author, who is <a href="https://github.com/uhl1k">uhl1k</a> (Roman Janků).
+</p>
+
+<p>
+    Source codes and other information about Typewriter can be found on its public <a href="https://github.com/uhl1k/Typewriter">GitHub</a> repository.
+</p>
+
+<p>
+    <em>Who is author?</em>
+</p>
+<p>
+    My name is Roman Janků and currently I am a student at Faculty of Electrical Engineering at Czech Technical University in Prague. In my free time I write mostly poems, but some novels as well and I also play acoustic guitar.
+</p>
+
+<h2 id="content">Content</h2>
+
+<ul>
+    <li><a href="#interface">Description of interface</a></li>
+    <li><a href="#create">Creating a new file</a></li>
+    <li><a href="#open">Opening an existing file</a></li>
+    <li><a href="#create-book">Creating a book</a></li>
+    <li><a href="#add-sections">Adding poems and chapters</a></li>
+    <li><a href="#modify">Modifying books, chapters and poems</a></li>
+    <li><a href="#delete">Deleting books, chapters and poems</a></li>
+    <li><a href="#saving">Saving file</a></li>
+    <li><a href="#exporting">Exporting book</a></li>
+</ul>
+
+<h2 id="interface">Description of interface</h2>
+
+<p>
+    There are four main part of the Typewriter graphical interface. First is menu bar at the very top. Here you can find options for interacting with files under the <em>File</em> menu and information about the program and its license under the <em>Help</em> menu.
+</p>
+
+<p>
+    Second important part of the interface is toolbar. Its default position is immediately under the menu, however you can move it around as you wish using the mouse. On this toolbar there are buttons for creating, modifying and deleting the books, chapters and poems as well as export buttons.
+</p>
+
+<p>
+    Third part if the interface are two boxes on the left. The top one is list of the books. All books created in the opened file will be shown here. The bottom box shows chapters and poems that are in the selected book. You can change size of these boxes by pulling their edges.
+</p>
+
+<p>
+    The last part of the interface is the text area in the rest of the window. In this area the content of selected chapter or poem is shown and you can modify it.
+</p>
+
+<p><a href="content">Go back up</a></p>
+
+<h2 id="create">Create a new file</h2>
+
+<p>
+    When you start the Typewriter you already have a new file created. However, if you have another file already opened, you need to create new file manually. Go to <em>File</em> menu and click on <em>Open</em> option. If you have any unsaved changes, the program will ask you if you want to save them. Then a list of books and chapters and poems and the editing area will be cleaned. At this point you have a new file opened. But be careful, this file is only in RAM memory. You need to save it to keep the data after you close the Typewriter.
+</p>
+
+<p><a href="content">Go back up</a></p>
+
+<h2 id="open">Open an existing file</h2>
+
+<p>
+    You have two options when it comes to opening files. Either you can supply file name as an argument when starting the Typewriter. The file will be automatically opened when the Typewriter starts.
+</p>
+
+<p>
+    The second option is to go into <em>File</em> menu and click <em>Open</em> option. A dialog will appear in which you can select the file you want to open. After confirming the dialog the selected file will be opened. If you have any unsaved changes you will be asked if you want to save them.
+</p>
+
+<p><a href="content">Go back up</a></p>
+
+<h2 id="create-book">Creating a book</h2>
+
+<p>
+    To create a book click on the <em>Add new book</em> button in the toolbar.
+</p>
+
+<img src="../ico/addBook.png"/>
+
+<p>
+    Typewriter will ask you for the name of the new book. Enter the name and confirm the dialog. The new book will be created and will be added to the list of books. You can now work with it and add chapters and poems to it or export it.
+</p>
+
+<p><a href="content">Go back up</a></p>
+
+<h2 id="add-sections">Adding poems and chapters</h2>
+
+<p>
+    To add a new chapter to a book, click on the <em>Add new chapter</em> button in the toolbar to add new chapter
+</p>
+
+<img src="../ico/addChapter.png">
+
+<p>
+    or alternatively use <em>Add new poem</em> button in the toolbar to add new poem to a book.
+</p>
+
+<img src="../ico/addPoem.png">
+
+<p>
+    You need to select a book before adding chapter or poem. Typewriter will ask you for a name of the chapter or poem. After confirming the name the chapter or poem will be created and added to the book. You will see it in the list of poems and chapters after selecting the book.
+</p>
+
+<p><a href="content">Go back up</a></p>
+
+<h2 id="modify">Modifying book, chapters and poems</h2>
+
+<p>
+    To modify book click on the <em>Modify book</em> button in the toolbar.
+</p>
+
+<img src="../ico/editBook.png">
+
+<p>
+    You can change the title and author of the book. To save changes click on <em>Save</em> button. If you do not want to save changes close the dialog using <em>x</em> in the top right corner.
+</p>
+
+<p>
+    To modify chapter or poem click on the <em>Modify chapter/poem</em> button in the toolbar.
+</p>
+
+<img src="../ico/editSection.png">
+
+<p>
+    In the dialog that will open you can modify name of the chapter or poem. Content of the chapter is displayed in the text area in the main window and you can edit it directly.
+</p>
+
+<p>
+    To change the order of chapters and poems in the book you can use the <em>Move up</em> and <em>Move down</em> buttons in the toolbar.
+</p>
+
+<img src="../ico/moveUp.png">
+
+<img src="../ico/moveDown.png">
+
+<p>
+    Select the chapter or poem you want to move and move it to the place you want it to be using the buttons.
+</p>
+
+<p><a href="content">Go back up</a></p>
+
+<h2 id="deleting">Deleting books, chapters and poems</h2>
+
+<p>
+    To delete a book select the book you want to delete and click on <em>Delete book</em> button in the toolbar.
+</p>
+
+<img src="../ico/deleteBook.png">
+
+<p>
+    You will be asked for confirmation and the book will be deleted including all its poems anc chapters. To delete a poem or chapter select the poem or chapter you want to delete and click on the <em>Delete chapter/poem</em> button in the toolbar.
+</p>
+
+<img src="../ico/deleteSection.png">
+
+<p>
+    Selected chapter or poem will be deleted.
+</p>
+
+<p><a href="content">Go back up</a></p>
+
+<h2 id="saving">Saving file</h2>
+
+<p>
+    To save changes in the file use option <em>Save</em> in the <em>File</em> menu. If the file has not been saved yet you will be asked for the file name and location you want to save it in.
+</p>
+
+<p>
+    To save changes in a new file us option <em>Save as</em> in the <em>File</em> menu. You will be asked for name and location of the file.
+</p>
+
+<p><a href="content">Go back up</a></p>
+
+<h2 id="exporting">Exporting book</h2>
+
+<p>
+    To export the book and all its chapters and poems to a file use <em>Export</em> buttons at the end of a toolbar.
+</p>
+
+<img src="../ico/exportText.png">
+
+<p>
+    The file extension written on the button marks the format in which the export will be. So <em>.txt</em> means plain text file, <em>.tex</em> means latex file and <em>.rtf</em> mean Rich-Text format.
+</p>
+
+<p><a href="content">Go back up</a></p>
+
 </body>
 </html>
