@@ -8,11 +8,22 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class LatexExporter extends Exporter {
+
+  private String pageSize = "A5";
+
+  public String getPageSize() {
+    return pageSize;
+  }
+
+  public void setPageSize(String pageSize) {
+    this.pageSize = pageSize;
+  }
+
   @Override
   public void exportToFile(Book book, File file) {
     try(PrintWriter writer = new PrintWriter(file)) {
       writer.println("\\documentclass[11pt]{book}");
-      writer.println("\\usepackage[paper=A4,pagesize]{typearea}");
+      writer.println("\\usepackage[paper=" + pageSize + ",pagesize]{typearea}");
       writer.println("\\usepackage[utf8]{inputenc}");
       writer.println("\\usepackage[T1]{fontenc}");
       writer.println("\\usepackage{babel}");

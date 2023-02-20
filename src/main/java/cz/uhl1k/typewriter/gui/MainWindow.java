@@ -347,12 +347,12 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     toolBar.addSeparator();
 
     var exportText = new JButton(new ImageIcon(getClass().getResource("/ico/exportText.png")));
-    exportText.setToolTipText(bundle.getString("exportSelectedBookAsText"));
+    exportText.setToolTipText(bundle.getString("exportText"));
     exportText.addActionListener(e -> exportText());
     toolBar.add(exportText);
 
     var exportLatex = new JButton(new ImageIcon(getClass().getResource("/ico/exportText.png")));
-    exportLatex.setToolTipText(bundle.getString("exportSelectedBookAsText"));
+    exportLatex.setToolTipText(bundle.getString("exportLatex"));
     exportLatex.addActionListener(e -> exportLatex());
     toolBar.add(exportLatex);
 
@@ -814,6 +814,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
           file = new File(file + ".tex");
         }
         LatexExporter exporter = ExporterFactory.getNewLatexExporter();
+        exporter.setPageSize(JOptionPane.showInputDialog(bundle.getString("enterPageSize")));
         exporter.exportToFile(books.getSelectedValue(), file);
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(
