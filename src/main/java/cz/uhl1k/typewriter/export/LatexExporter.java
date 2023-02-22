@@ -23,7 +23,7 @@ public class LatexExporter extends Exporter {
   public void exportToFile(Book book, File file) {
     try(PrintWriter writer = new PrintWriter(file)) {
       writer.println("\\documentclass[11pt]{book}");
-      writer.println("\\usepackage[paper=" + pageSize + ",pagesize]{typearea}");
+      writer.println("\\usepackage[" + pageSize.toLowerCase() + "paper]{geometry}");
       writer.println("\\usepackage[utf8]{inputenc}");
       writer.println("\\usepackage[T1]{fontenc}");
       writer.println("\\usepackage{babel}");
