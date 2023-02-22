@@ -29,6 +29,13 @@ public class LatexExporter extends Exporter {
       writer.println("\\usepackage{babel}");
       writer.println("\\usepackage[nodayofweek]{datetime}");
       writer.println();
+      writer.println("\\usepackage{fancyhdr}");
+      writer.println("\\pagestyle{fancy}");
+      writer.println("\\renewcommand{\\headrulewidth}{0pt}");
+      writer.println("\\fancyhead{}");
+      writer.println("\\fancyfoot{}");
+      writer.println("\\fancyfoot[CE,CO]{\\thepage}");
+      writer.println();
       writer.println("\\title{" + book.getTitle() + "}");
       writer.println("\\author{" + book.getAuthor() + "}");
       writer.println("\\date{\\today}");
@@ -37,6 +44,7 @@ public class LatexExporter extends Exporter {
       writer.println();
       writer.println("\\maketitle");
       writer.println("\\tableofcontents");
+      writer.println();
 
       for (int i = 0; i < book.getSections().getSize(); i++) {
         Section section = book.getSections().get(i);
