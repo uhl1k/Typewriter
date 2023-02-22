@@ -24,6 +24,7 @@ import cz.uhl1k.typewriter.data.Data;
 import cz.uhl1k.typewriter.exceptions.NoFileSpecifiedException;
 import cz.uhl1k.typewriter.exceptions.SettingsNotSavedException;
 import cz.uhl1k.typewriter.export.ExporterFactory;
+import cz.uhl1k.typewriter.export.LatexExporter;
 import cz.uhl1k.typewriter.export.TextExporter;
 import cz.uhl1k.typewriter.model.Book;
 import cz.uhl1k.typewriter.model.Chapter;
@@ -346,9 +347,14 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     toolBar.addSeparator();
 
     var exportText = new JButton(new ImageIcon(getClass().getResource("/ico/exportText.png")));
-    exportText.setToolTipText(bundle.getString("exportSelectedBookAsText"));
+    exportText.setToolTipText(bundle.getString("exportText"));
     exportText.addActionListener(e -> exportText());
     toolBar.add(exportText);
+
+    var exportLatex = new JButton(new ImageIcon(getClass().getResource("/ico/exportText.png")));
+    exportLatex.setToolTipText(bundle.getString("exportLatex"));
+    exportLatex.addActionListener(e -> exportLatex());
+    toolBar.add(exportLatex);
 
     return toolBar;
   }
@@ -785,6 +791,38 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
             bundle.getString("error"),
             JOptionPane.ERROR_MESSAGE);
         Logging.log("Error while exporting .txt file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
+      }
+    }
+  }
+
+  private void exportLatex() {
+    if (books.getSelectedIndex() < 0) {
+      JOptionPane.showMessageDialog(
+          this,
+          bundle.getString("noBookSelected"),
+          bundle.getString("error"),
+          JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileFilter(new FileNameExtensionFilter("LaTex file (*.tex)", "tex"));
+    int option = fileChooser.showSaveDialog(this);
+    if (option == JFileChooser.APPROVE_OPTION) {
+      try {
+        var file = fileChooser.getSelectedFile();
+        if (!file.getPath().endsWith(".tex")) {
+          file = new File(file + ".tex");
+        }
+        LatexExporter exporter = ExporterFactory.getNewLatexExporter();
+        exporter.setPageSize(JOptionPane.showInputDialog(bundle.getString("enterPageSize")));
+        exporter.exportToFile(books.getSelectedValue(), file);
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            bundle.getString("wrongSavingFile") + "\n" + ex.getMessage(),
+            bundle.getString("error"),
+            JOptionPane.ERROR_MESSAGE);
+        Logging.log("Error while exporting .tex file! Cause: " + ex.getMessage(), Level.SEVERE, ex.getStackTrace());
       }
     }
   }

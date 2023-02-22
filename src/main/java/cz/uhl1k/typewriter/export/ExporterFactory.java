@@ -28,4 +28,8 @@ public class ExporterFactory {
   public static TextExporter getNewTextExporter() {
     return new TextExporter();
   }
+
+  public static LatexExporter getNewLatexExporter() {
+    return new LatexExporter();
+  }
 }
