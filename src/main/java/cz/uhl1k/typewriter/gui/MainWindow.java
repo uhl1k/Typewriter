@@ -351,7 +351,7 @@ public class MainWindow extends JFrame implements DataChangeListener, FileChange
     exportText.addActionListener(e -> exportText());
     toolBar.add(exportText);
 
-    var exportLatex = new JButton(new ImageIcon(getClass().getResource("/ico/exportText.png")));
+    var exportLatex = new JButton(new ImageIcon(getClass().getResource("/ico/exportTex.png")));
     exportLatex.setToolTipText(bundle.getString("exportLatex"));
     exportLatex.addActionListener(e -> exportLatex());
     toolBar.add(exportLatex);
