@@ -22,8 +22,8 @@ public class LatexExporter extends Exporter {
   @Override
   public void exportToFile(Book book, File file) {
     try(PrintWriter writer = new PrintWriter(file)) {
-      writer.println("\\documentclass[11pt]{book}");
-      writer.println("\\usepackage[" + pageSize.toLowerCase() + "paper]{geometry}");
+      writer.println("\\documentclass[11pt," + pageSize.toLowerCase() + "paper]{book}");
+      writer.println("\\usepackage[inner=2cm,outer=1cm,top=1cm,bottom=1.5cm]{geometry}");
       writer.println("\\usepackage[utf8]{inputenc}");
       writer.println("\\usepackage[T1]{fontenc}");
       writer.println("\\usepackage{babel}");
@@ -36,6 +36,12 @@ public class LatexExporter extends Exporter {
       writer.println("\\fancyfoot{}");
       writer.println("\\fancyfoot[CE,CO]{\\thepage}");
       writer.println();
+      writer.println("\\renewcommand{\\headrulewidth}{0pt}");
+      writer.println("\\widowpenalties 1 10000");
+      writer.println("\\raggedbottom");
+      writer.println("\\setlength{\\parindent}{0pt}");
+      writer.println("\\setlength{\\parskip}{1.5em}");
+      writer.println();
       writer.println("\\title{" + book.getTitle() + "}");
       writer.println("\\author{" + book.getAuthor() + "}");
       writer.println("\\date{\\today}");
@@ -43,7 +49,6 @@ public class LatexExporter extends Exporter {
       writer.println("\\begin{document}");
       writer.println();
       writer.println("\\maketitle");
-      writer.println("\\tableofcontents");
       writer.println();
 
       for (int i = 0; i < book.getSections().getSize(); i++) {
@@ -55,7 +60,16 @@ public class LatexExporter extends Exporter {
           writer.println("\\section*{" + section.getTitle() + "}");
           writer.println("\\addcontentsline{toc}{section}{" + section.getTitle() + "}");
           writer.println("\\noindent");
-          section.getContent().lines().forEach(line -> writer.println(line + "\\\\"));
+          var lines = section.getContent().split("\n");
+          for (int j = 0; j < lines.length; j++) {
+            if (lines[j].length() > 0) {
+              writer.print(lines[j]);
+              if (j != lines.length - 1 && lines[j+1].length() > 0) {
+                writer.print("\\\\");
+              }
+            }
+            writer.println();
+          }
         } else {
           writer.println("\\chapter{" + section.getTitle() + "}");
           section.getContent().lines().forEach(line -> {
@@ -65,6 +79,9 @@ public class LatexExporter extends Exporter {
         }
       }
 
+      writer.println();
+      writer.println("\\setlength{\\parskip}{0em}");
+      writer.println("\\tableofcontents");
       writer.println();
       writer.println("\\end{document}");
     } catch (IOException ex) {
